@@ -1,0 +1,5866 @@
+[
+  {
+    "name": "IIOT00_CFM",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.IIOT00_CFM",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "IIOT00_CFM 테이블은 제조 공정의 IIoT(산업용 사물인터넷) 데이터를 관리하는 테이블로, 주로 PR01 공정과 CUT-A-01 설비에서 생성된 파일 정보를 저장합니다. 이 테이블은 각 파일의 원본명과 시스템 내 고유 파일명을 기록하여 데이터 추적과 관리에 활용되며, 공정 및 설비별 파일 순번을 기준으로 데이터가 구분됩니다. 다른 공정 및 설비 관련 테이블과 연계되어 IIoT 데이터의 수집, 저장, 분석 업무에 중요한 역할을 합니다.",
+    "rowCount": 31,
+    "lastUpdated": "2025-08-26 01:22:15",
+    "columns": [
+      {
+        "name": "TIME_ID",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(12)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "데이터 수집 시점을 나타내는 고유 식별자로, 연월일시분초 형태의 문자열로 IIoT CFM 데이터의 시간 기준을 구분합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 12,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "해당 데이터가 속한 공정의 코드를 나타내며, 현재는 'PR01'로 고정되어 있어 특정 공정 데이터를 식별하는 데 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "데이터를 생성한 설비를 구분하는 코드로, 주로 'CUT-A-01' 설비에서 수집된 데이터를 식별하는 데 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NO",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "동일 시간, 공정, 설비 내에서 파일의 순번을 나타내어 중복 없이 각 파일을 고유하게 구분합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 5,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "실제 저장된 원본 파일명을 기록하여 데이터 출처를 확인하고 관리하는 데 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 6,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "시스템 내에서 관리되는 파일명을 저장하며, 모든 값이 고유하여 파일 식별 및 조회에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 7,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "파일의 컨텐츠 타입을 나타내는 컬럼이나 현재 모든 값이 NULL로, 향후 파일 유형 구분 용도로 활용 가능성이 있습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "TIME_ID",
+          "CD_PROCE",
+          "CD_EQUIP",
+          "NO"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 31,
+      "sampleSize": 31,
+      "columnProfiles": [
+        {
+          "name": "TIME_ID",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 29,
+          "cardinality": 0.9355,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.0645
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.0645
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0323
+            }
+          ]
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0323,
+          "topValues": [
+            {
+              "value": "PR01",
+              "count": 31,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "CD_EQUIP",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 3,
+          "cardinality": 0.0968,
+          "topValues": [
+            {
+              "value": "CUT-A-01",
+              "count": 28,
+              "ratio": 0.9032
+            },
+            {
+              "value": "CUT-A-02",
+              "count": 2,
+              "ratio": 0.0645
+            },
+            {
+              "value": "CUT-S-01",
+              "count": 1,
+              "ratio": 0.0323
+            }
+          ]
+        },
+        {
+          "name": "NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0323,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": null,
+          "stddev": null
+        },
+        {
+          "name": "OGN_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 14,
+          "cardinality": 0.4516,
+          "topValues": [
+            {
+              "value": "240813_162420.csv",
+              "count": 6,
+              "ratio": 0.1935
+            },
+            {
+              "value": "20250703104022.csv",
+              "count": 6,
+              "ratio": 0.1935
+            },
+            {
+              "value": "test_cfm.csv",
+              "count": 3,
+              "ratio": 0.0968
+            },
+            {
+              "value": "20250807172245.csv",
+              "count": 3,
+              "ratio": 0.0968
+            },
+            {
+              "value": "20250825113258.csv",
+              "count": 3,
+              "ratio": 0.0968
+            }
+          ]
+        },
+        {
+          "name": "FILE_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 31,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "30672",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "34497",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "31742",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "50532",
+              "count": 1,
+              "ratio": 0.0323
+            },
+            {
+              "value": "7472",
+              "count": 1,
+              "ratio": 0.0323
+            }
+          ]
+        },
+        {
+          "name": "FILE_TYPE",
+          "nullCount": 31,
+          "nullRatio": 1.0,
+          "uniqueCount": 0,
+          "cardinality": 0.0
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "TIME_ID",
+        "CD_PROCE",
+        "CD_EQUIP",
+        "NO",
+        "OGN_NM",
+        "FILE_NM",
+        "FILE_TYPE"
+      ],
+      "rows": [
+        [
+          "***MASKED***",
+          "PR01",
+          "CUT-A-01",
+          "0",
+          "CFM 데이터.csv",
+          "50532",
+          null
+        ],
+        [
+          "***MASKED***",
+          "PR01",
+          "CUT-A-01",
+          "0",
+          "스크린샷 2025-05-20 145019.png",
+          "3981",
+          null
+        ],
+        [
+          "***MASKED***",
+          "PR01",
+          "CUT-A-01",
+          "0",
+          "2025년도_자율형공장(AI트랙)_구축지원사업_공고(안).pdf",
+          "11388",
+          null
+        ],
+        [
+          "***MASKED***",
+          "PR01",
+          "CUT-A-01",
+          "0",
+          "test_cfm.csv",
+          "30672",
+          null
+        ],
+        [
+          "***MASKED***",
+          "PR01",
+          "CUT-A-01",
+          "0",
+          "20250825113258.csv",
+          "98126",
+          null
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "IIOT00_CVM",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.IIOT00_CVM",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "설비 관리 업무 영역의 핵심 테이블로, 성창사의 설비 코드를 체계적으로 관리합니다. 각 설비의 고유 정보를 저장하여 공정 및 데이터 연계 시 기준 정보로 활용됩니다.",
+    "rowCount": 0,
+    "lastUpdated": null,
+    "columns": [
+      {
+        "name": "TIME_ID",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(12)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "데이터 생성 시점을 나타내는 고유 식별자로, 연월일시분초 형식의 문자열로 IIoT 데이터의 시간 기준을 구분합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 12,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "해당 데이터가 속한 제조 공정의 고유 코드로, 공정별 데이터 구분 및 분석에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "데이터를 수집한 설비를 식별하는 고유 코드로, 설비별 상태 및 성능 모니터링에 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NO",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "동일 시간, 공정, 설비 내에서 여러 파일이 존재할 경우 각 파일을 구분하는 순번입니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 5,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "실제 원본 파일의 이름으로, 데이터 출처 확인 및 원본 관리에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 6,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "시스템 내에서 관리되는 파일명으로, 내부 처리 및 저장 시 파일 식별에 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 7,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "파일의 콘텐츠 유형을 나타내며, 파일 형식에 따른 처리 및 분류에 참고됩니다. (NULL 허용)",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "TIME_ID",
+          "CD_PROCE",
+          "CD_EQUIP",
+          "NO"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 0,
+      "columnProfiles": []
+    }
+  },
+  {
+    "name": "ITEM_MASTER_MIG",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.ITEM_MASTER_MIG",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "이 테이블은 상품 마스터 데이터 관리를 위한 업무 영역에 속하며, 상품 코드와 상품명을 저장하여 기본 상품 정보를 관리합니다. 주요 목적은 고유한 상품 식별자와 상품명을 체계적으로 보관하는 것이며, 상품 관련 다른 시스템이나 테이블에서 참조하는 기준 데이터로 활용됩니다. 실무자는 이 테이블을 통해 상품 정보를 조회하거나 연동하여 일관된 상품 데이터를 유지할 수 있습니다.",
+    "rowCount": 79,
+    "lastUpdated": "2025-08-26 01:22:18",
+    "columns": [
+      {
+        "name": "CD_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "상품 그룹을 식별하는 고유 코드로, 마스터 데이터 참조 및 다른 테이블과의 연계를 위해 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NM_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 2,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "상품 그룹의 명칭으로, 해당 코드에 대한 구체적인 이름을 나타내며 주로 'HARNESS' 관련 값이 집중되어 있습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 79,
+      "sampleSize": 79,
+      "columnProfiles": [
+        {
+          "name": "CD_GITEM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 79,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0127
+            }
+          ]
+        },
+        {
+          "name": "NM_GITEM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 5,
+          "cardinality": 0.0633,
+          "topValues": [
+            {
+              "value": "HARNESS",
+              "count": 71,
+              "ratio": 0.8987
+            },
+            {
+              "value": "CF HARNESS",
+              "count": 5,
+              "ratio": 0.0633
+            },
+            {
+              "value": "ABQ76861002",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "EAD43248520",
+              "count": 1,
+              "ratio": 0.0127
+            },
+            {
+              "value": "EAD62494402",
+              "count": 1,
+              "ratio": 0.0127
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "CD_GITEM",
+        "NM_GITEM"
+      ],
+      "rows": [
+        [
+          "EAD54367542",
+          "HARNESS"
+        ],
+        [
+          "***MASKED***",
+          "HARNESS"
+        ],
+        [
+          "***MASKED***",
+          "HARNESS"
+        ],
+        [
+          "EAD64947201",
+          "HARNESS"
+        ],
+        [
+          "6631TP349602",
+          "HARNESS"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES00_QA_01",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES00_QA_01",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "단면검사 현황 데이터를 관리하는 테이블로, 작업별 검사 결과와 관련된 품질 지표 및 작업 정보가 저장됩니다. 각 작업번호를 기준으로 제품, 공정, 설비, 작업자 정보와 양품 및 불량 수량, 다양한 검사 항목별 수치가 기록되어 품질 관리와 분석에 활용됩니다. 장력시험 현황 테이블과 함께 작업별 검사 결과를 통합 관리하며, 관련 불량 미디어 파일 정보는 별도 파일 테이블과 연계됩니다.",
+    "rowCount": 29,
+    "lastUpdated": "2025-08-26 01:22:19",
+    "columns": [
+      {
+        "name": "WK_ORD_NO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업번호로, 단면검사 현황의 각 작업을 고유하게 식별하는 기본키입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "DT_WK_ORD",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 2,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업지시일로, 해당 작업이 지시된 날짜를 나타내며 업무 일정 관리에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "제품코드로, 검사 대상 제품을 식별하며 제품 마스터 데이터와 연계됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 4,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "공정코드로, 작업이 수행된 제조 공정을 나타내며 공정 마스터와 참조 관계가 있습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 5,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "설비코드로, 검사가 이루어진 설비를 식별하며 설비 관리 시스템과 연동됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EMPLO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 6,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업자 코드로, 검사를 수행한 작업자를 식별하며 인사 시스템의 사원 코드와 연결됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "ODR_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 7,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "작업지시 수량으로, 해당 작업에 지시된 총 생산 수량을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "GOOD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 8,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "양품수량으로, 검사 결과 양품으로 판정된 제품의 수량을 기록합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "BAD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 9,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "불량수량으로, 검사 결과 불량으로 판정된 제품의 수량을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "DT_STD_END",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 10,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "검사일로, 실제 검사가 완료된 날짜를 기록하며 품질 이력 관리에 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "AREA",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 11,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-area로, 검사 대상의 면적 값을 나타내어 품질 평가에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "CHEIGHT",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 12,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-crimp height로, 압착 높이 측정값을 기록하여 접합 품질을 평가합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "CWIDTH",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 13,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-crimp width로, 압착 너비 측정값을 나타내어 접합 상태를 확인합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "SURFACE",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 14,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-inner terminal surface로, 내부 단자 표면 상태를 수치로 표현합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "WIRE",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 15,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-final wire area로, 최종 와이어 면적을 측정하여 품질을 판단합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "SECTION",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 16,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-final cross section로, 최종 단면적을 나타내어 제품 규격 준수를 확인합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "COMP",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 17,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-compression rate로, 압축률을 기록하여 접합 강도를 평가합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "VACUUM",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 18,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사항목-vacuum rate로, 진공률을 나타내어 검사 환경 및 품질 상태를 반영합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 19,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "실 불량 미디어 파일명으로, 불량 관련 미디어 파일명을 저장하며 향후 삭제 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 20,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "불량 미디어 파일명으로, 불량품 관련 미디어 파일명을 기록하며 삭제 예정 컬럼입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 21,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "불량 미디어 파일 컨텐츠 타입으로, 미디어 파일의 형식을 나타내며 삭제 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 22,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "삭제여부로, 데이터의 활성 상태를 표시하며 '0'은 삭제된 데이터를 의미합니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_CNT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 23,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "파일 개수로, 관련 미디어 파일의 총 개수를 나타내어 불량 기록 관리에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WK_ORD_NO"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 29,
+      "sampleSize": 29,
+      "columnProfiles": [
+        {
+          "name": "WK_ORD_NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 29,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "WRK-250218-0046",
+              "count": 1,
+              "ratio": 0.0345
+            },
+            {
+              "value": "WRK-250219-0002",
+              "count": 1,
+              "ratio": 0.0345
+            },
+            {
+              "value": "WRK-250219-0001",
+              "count": 1,
+              "ratio": 0.0345
+            },
+            {
+              "value": "WRK-250218-QA01-0046",
+              "count": 1,
+              "ratio": 0.0345
+            },
+            {
+              "value": "WR2025-07-01-01",
+              "count": 1,
+              "ratio": 0.0345
+            }
+          ]
+        },
+        {
+          "name": "DT_WK_ORD",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 12,
+          "cardinality": 0.4138,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 10,
+              "ratio": 0.3448
+            },
+            {
+              "value": "***MASKED***",
+              "count": 4,
+              "ratio": 0.1379
+            },
+            {
+              "value": "***MASKED***",
+              "count": 3,
+              "ratio": 0.1034
+            },
+            {
+              "value": "***MASKED***",
+              "count": 3,
+              "ratio": 0.1034
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.069
+            }
+          ]
+        },
+        {
+          "name": "CD_GITEM",
+          "nullCount": 3,
+          "nullRatio": 0.1034,
+          "uniqueCount": 14,
+          "cardinality": 0.4828,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 11,
+              "ratio": 0.3793
+            },
+            {
+              "value": "6631TP349602",
+              "count": 2,
+              "ratio": 0.069
+            },
+            {
+              "value": "BNF-12GRAY",
+              "count": 2,
+              "ratio": 0.069
+            },
+            {
+              "value": "EAD63965730",
+              "count": 1,
+              "ratio": 0.0345
+            },
+            {
+              "value": "ABQ76861002-IP",
+              "count": 1,
+              "ratio": 0.0345
+            }
+          ]
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 1,
+          "nullRatio": 0.0345,
+          "uniqueCount": 1,
+          "cardinality": 0.0345,
+          "topValues": [
+            {
+              "value": "QA01",
+              "count": 28,
+              "ratio": 0.9655
+            }
+          ]
+        },
+        {
+          "name": "CD_EQUIP",
+          "nullCount": 1,
+          "nullRatio": 0.0345,
+          "uniqueCount": 1,
+          "cardinality": 0.0345,
+          "topValues": [
+            {
+              "value": "QA-1-1",
+              "count": 28,
+              "ratio": 0.9655
+            }
+          ]
+        },
+        {
+          "name": "CD_EMPLO",
+          "nullCount": 1,
+          "nullRatio": 0.0345,
+          "uniqueCount": 2,
+          "cardinality": 0.069,
+          "topValues": [
+            {
+              "value": "EMP003",
+              "count": 25,
+              "ratio": 0.8621
+            },
+            {
+              "value": "EMP001",
+              "count": 3,
+              "ratio": 0.1034
+            }
+          ]
+        },
+        {
+          "name": "ODR_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 9,
+          "cardinality": 0.3103,
+          "min": 10.0,
+          "max": 2800.0,
+          "mean": 465.1724,
+          "stddev": 646.2604
+        },
+        {
+          "name": "GOOD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 12,
+          "cardinality": 0.4138,
+          "min": 0.0,
+          "max": 2800.0,
+          "mean": 283.4138,
+          "stddev": 576.1393
+        },
+        {
+          "name": "BAD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 7,
+          "cardinality": 0.2414,
+          "min": 0.0,
+          "max": 50.0,
+          "mean": 3.4828,
+          "stddev": 10.477
+        },
+        {
+          "name": "DT_STD_END",
+          "nullCount": 14,
+          "nullRatio": 0.4828,
+          "uniqueCount": 5,
+          "cardinality": 0.1724,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 6,
+              "ratio": 0.2069
+            },
+            {
+              "value": "***MASKED***",
+              "count": 4,
+              "ratio": 0.1379
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.069
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.069
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0345
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WK_ORD_NO",
+        "DT_WK_ORD",
+        "CD_GITEM",
+        "CD_PROCE",
+        "CD_EQUIP",
+        "CD_EMPLO",
+        "ODR_QT",
+        "GOOD_QT",
+        "BAD_QT",
+        "DT_STD_END",
+        "AREA",
+        "CHEIGHT",
+        "CWIDTH",
+        "SURFACE",
+        "WIRE",
+        "SECTION",
+        "COMP",
+        "VACUUM",
+        "OGN_NM",
+        "FILE_NM",
+        "FILE_TYPE",
+        "KD_USING",
+        "FILE_CNT"
+      ],
+      "rows": [
+        [
+          "WRK-250219-0101",
+          "***MASKED***",
+          null,
+          null,
+          null,
+          null,
+          "1000",
+          "0",
+          "0",
+          null,
+          "0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          null,
+          null,
+          null,
+          "1",
+          "0"
+        ],
+        [
+          "WRK-250218-QA01-0046",
+          "***MASKED***",
+          "***MASKED***",
+          "QA01",
+          "QA-1-1",
+          "EMP001",
+          "100",
+          "0",
+          "0",
+          null,
+          "0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "",
+          null,
+          null,
+          "0",
+          "0"
+        ],
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "EAD63965730",
+          "QA01",
+          "QA-1-1",
+          "EMP003",
+          "100",
+          "98",
+          "2",
+          "***MASKED***",
+          "0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "Img_1739945503357.jpg",
+          "10251",
+          null,
+          "1",
+          "1"
+        ],
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "***MASKED***",
+          "QA01",
+          "QA-1-1",
+          "EMP001",
+          "100",
+          "0",
+          "0",
+          null,
+          "0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "",
+          null,
+          null,
+          "1",
+          "0"
+        ],
+        [
+          "WRK-250219-010",
+          "***MASKED***",
+          "***MASKED***",
+          "QA01",
+          "QA-1-1",
+          "EMP003",
+          "1000",
+          "995",
+          "5",
+          "***MASKED***",
+          "0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "0.0",
+          "Img_1739940148987.jpg",
+          "19401",
+          null,
+          "1",
+          "1"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES00_QA_02",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES00_QA_02",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "장력시험 현황 데이터를 저장하는 테이블로, 작업별 장력 시험 결과와 검사 항목별 상태 정보를 포함합니다. 작업번호를 기준으로 제품, 공정, 설비, 작업자 정보와 양품 및 불량 수량, 금형번호, 선번, 색상 등 상세 검사 항목이 기록되어 품질 평가에 사용됩니다. 단면검사 현황 테이블과 유사하게 작업별 검사 결과를 관리하며, 불량 미디어 파일 정보는 별도의 파일 테이블과 연동됩니다.",
+    "rowCount": 20,
+    "lastUpdated": "2025-08-26 01:22:21",
+    "columns": [
+      {
+        "name": "WK_ORD_NO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업 현황을 고유하게 식별하는 작업 번호로, 장력시험 데이터의 기본키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "DT_WK_ORD",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 2,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업지시가 내려진 날짜를 나타내며, 작업 일정 관리에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "시험 대상 제품을 구분하는 제품 코드로, 제품 마스터와 연계되어 품목 정보를 제공합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 4,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "장력시험이 수행된 공정의 코드를 나타내며, 공정 마스터와 참조 관계를 가집니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 5,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "시험에 사용된 설비를 식별하는 설비 코드로, 설비 관리 및 이력 추적에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EMPLO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 6,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "시험 작업을 수행한 작업자의 고유 코드로, 인사 및 작업자별 성과 분석에 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "ODR_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 7,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "해당 작업지시에 지시된 총 작업 수량으로, 생산 계획 대비 실적 분석에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "GOOD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 8,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사 후 양품으로 판정된 수량을 나타내며, 품질 성과 평가에 중요한 지표입니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "BAD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 9,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사 결과 불량으로 판정된 수량으로, 불량 원인 분석 및 개선 활동에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "DT_STD_END",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 10,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "장력시험이 실제로 수행된 검사 일자를 기록하며, 검사 이력 관리에 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "DAI",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 11,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사 대상 금형 번호로, 금형별 품질 이력 및 관리에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "LINE_NO",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 12,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사 대상 선번을 나타내며, 생산 라인 내 특정 위치 식별에 사용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "COLOR",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 13,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "검사 대상 제품의 색상을 기록하여, 색상별 품질 특성 분석에 활용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "SURFACE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 14,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "제품 겉모양 검사 결과로, '1'은 양호, '0'은 불량을 의미하여 외관 품질 판단에 사용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CUT",
+        "dataType": "float",
+        "dataTypeDisplay": "float",
+        "ordinalPosition": 15,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "절단 길이 측정값으로, 제품 규격 준수 여부 확인에 활용되는 주요 시험 항목입니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 12,
+        "numericScale": null
+      },
+      {
+        "name": "STRIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 16,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "탈피 길이 정보를 기록하며, 제품의 가공 상태 및 품질 평가에 사용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "IN_LINE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 17,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "심선수(내부 심선 개수)를 나타내어, 제품 구조 및 품질 특성 분석에 활용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "WIDTH",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 18,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "제품의 높이 또는 폭을 기록하여, 치수 검사 및 규격 적합성 평가에 사용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "GLUE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 19,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "인장력 시험 결과를 나타내며, 제품의 강도 및 내구성 평가에 중요한 지표입니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "STRONG",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 20,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "접속강도 검사 결과로, '1'은 양호, '0'은 불량을 의미하며 접합 품질 평가에 활용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "TAB",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 21,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "컷오프탭 검사 결과를 기록하여, 제품 마감 상태 및 품질 관리에 사용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "BELL",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 22,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "벨마우스(제품 끝부분 변형) 유무를 나타내며, '1'은 있음, '0'은 없음으로 품질 판단에 활용됩니다.",
+        "defaultValue": "",
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 23,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "실 불량 관련 미디어 파일명으로, 현재는 사용 중단 예정인 컬럼입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 24,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "불량 발생 시 촬영된 미디어 파일명을 기록하며, 향후 삭제 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 25,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "불량 미디어 파일의 콘텐츠 타입을 나타내며, 현재는 삭제 예정 컬럼입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 26,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "데이터의 삭제 여부를 표시하는 플래그로, '0'은 삭제된 데이터를 의미합니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_CNT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 27,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "관련 미디어 파일의 개수를 나타내어, 불량 기록과 연계된 자료 수량을 관리합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WK_ORD_NO"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 20,
+      "sampleSize": 20,
+      "columnProfiles": [
+        {
+          "name": "WK_ORD_NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 20,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "WR20250701-01",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "WRK-250218-QA02-0041",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "WRK-250218-QA02-0040",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "WRK-250218-QA02-0046",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "TEST-071001",
+              "count": 1,
+              "ratio": 0.05
+            }
+          ]
+        },
+        {
+          "name": "DT_WK_ORD",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 12,
+          "cardinality": 0.6,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 4,
+              "ratio": 0.2
+            },
+            {
+              "value": "***MASKED***",
+              "count": 4,
+              "ratio": 0.2
+            },
+            {
+              "value": "***MASKED***",
+              "count": 3,
+              "ratio": 0.15
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.05
+            }
+          ]
+        },
+        {
+          "name": "CD_GITEM",
+          "nullCount": 1,
+          "nullRatio": 0.05,
+          "uniqueCount": 12,
+          "cardinality": 0.6,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 7,
+              "ratio": 0.35
+            },
+            {
+              "value": "12505TS-1",
+              "count": 2,
+              "ratio": 0.1
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "6631TP349602",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "04R-JWPKF-VSLE-S",
+              "count": 1,
+              "ratio": 0.05
+            }
+          ]
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.05,
+          "topValues": [
+            {
+              "value": "QA02",
+              "count": 20,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "CD_EQUIP",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.05,
+          "topValues": [
+            {
+              "value": "QA-2-1",
+              "count": 20,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "CD_EMPLO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 3,
+          "cardinality": 0.15,
+          "topValues": [
+            {
+              "value": "EMP004",
+              "count": 15,
+              "ratio": 0.75
+            },
+            {
+              "value": "EMP001",
+              "count": 4,
+              "ratio": 0.2
+            },
+            {
+              "value": "EMP003",
+              "count": 1,
+              "ratio": 0.05
+            }
+          ]
+        },
+        {
+          "name": "ODR_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 6,
+          "cardinality": 0.3,
+          "min": 10.0,
+          "max": 1000.0,
+          "mean": 166.5,
+          "stddev": 212.1385
+        },
+        {
+          "name": "GOOD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 5,
+          "cardinality": 0.25,
+          "min": 0.0,
+          "max": 100.0,
+          "mean": 43.4,
+          "stddev": 48.0525
+        },
+        {
+          "name": "BAD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 5,
+          "cardinality": 0.25,
+          "min": 0.0,
+          "max": 30.0,
+          "mean": 4.6,
+          "stddev": 9.0244
+        },
+        {
+          "name": "DT_STD_END",
+          "nullCount": 12,
+          "nullRatio": 0.6,
+          "uniqueCount": 5,
+          "cardinality": 0.25,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.1
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.1
+            },
+            {
+              "value": "***MASKED***",
+              "count": 2,
+              "ratio": 0.1
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.05
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.05
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WK_ORD_NO",
+        "DT_WK_ORD",
+        "CD_GITEM",
+        "CD_PROCE",
+        "CD_EQUIP",
+        "CD_EMPLO",
+        "ODR_QT",
+        "GOOD_QT",
+        "BAD_QT",
+        "DT_STD_END",
+        "DAI",
+        "LINE_NO",
+        "COLOR",
+        "SURFACE",
+        "CUT",
+        "STRIP",
+        "IN_LINE",
+        "WIDTH",
+        "GLUE",
+        "STRONG",
+        "TAB",
+        "BELL",
+        "OGN_NM",
+        "FILE_NM",
+        "FILE_TYPE",
+        "KD_USING",
+        "FILE_CNT"
+      ],
+      "rows": [
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "***MASKED***",
+          "QA02",
+          "QA-2-1",
+          "EMP004",
+          "100",
+          "90",
+          "10",
+          "***MASKED***",
+          "10",
+          "20",
+          "333",
+          "1",
+          "1200.0",
+          "45/20",
+          "2023",
+          "15/14",
+          "25/22",
+          "1",
+          "24",
+          "1",
+          "Img_1739945642100.jpg",
+          "10005",
+          null,
+          "1",
+          "1"
+        ],
+        [
+          "WRK-250310-0001",
+          "***MASKED***",
+          "WB13B-41210A",
+          "QA02",
+          "QA-2-1",
+          "EMP004",
+          "100",
+          "99",
+          "1",
+          "***MASKED***",
+          "23",
+          "22",
+          "blue",
+          "1",
+          "13.0",
+          "7.66",
+          "4.5",
+          "3.4/3.3",
+          "11",
+          "0",
+          "3.66",
+          "1",
+          "Img_1741588401516.jpg",
+          "55955",
+          null,
+          "1",
+          "1"
+        ],
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "***MASKED***",
+          "QA02",
+          "QA-2-1",
+          "EMP004",
+          "100",
+          "90",
+          "10",
+          "***MASKED***",
+          "40",
+          "30",
+          "3",
+          "1",
+          "30.0",
+          "4",
+          "53",
+          "2",
+          "4",
+          "1",
+          "33422e",
+          "1",
+          "Img_1740442130063.jpg",
+          "72033",
+          null,
+          "0",
+          "1"
+        ],
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "12505HS-06",
+          "QA02",
+          "QA-2-1",
+          "EMP004",
+          "100",
+          "99",
+          "1",
+          "***MASKED***",
+          "10",
+          "10",
+          "12",
+          "1",
+          "120.0",
+          "12",
+          "13",
+          "2323",
+          "222",
+          "0",
+          "2233",
+          "0",
+          "Img_1740372473367.jpg",
+          "27823",
+          null,
+          "1",
+          "1"
+        ],
+        [
+          "***MASKED***",
+          "***MASKED***",
+          "6631TP349602",
+          "QA02",
+          "QA-2-1",
+          "EMP004",
+          "200",
+          "0",
+          "0",
+          null,
+          "0",
+          "0",
+          "",
+          "",
+          "0.0",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          "1",
+          "0"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES00_QA_FILES",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES00_QA_FILES",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "작업별 검사 결과와 연관된 미디어 파일 정보를 저장하는 테이블로, 각 작업번호와 공정, 공장 단위로 파일명과 실제 파일명, 파일 유형 정보를 관리합니다. 단면검사 및 장력시험 현황 테이블에서 참조하는 불량 미디어 파일을 통합하여 관리함으로써 검사 결과와 관련된 증빙 자료를 체계적으로 연결하고 활용할 수 있도록 지원합니다.",
+    "rowCount": 17,
+    "lastUpdated": "2025-08-26 01:22:23",
+    "columns": [
+      {
+        "name": "WK_ORD_NO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업 지시 번호로, 각 작업별 결과 파일을 고유하게 식별하는 기본키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공정 코드를 나타내며, 작업별 결과 파일이 속한 품질 검사 공정을 구분하는 기본키 요소입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FACTORY",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공장이 식별되는 코드로, 작업별 결과 파일이 생성된 공장을 구분하는 기본키 구성요소입니다.",
+        "defaultValue": "01",
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "저장된 파일의 고유한 이름으로, 작업별 결과 파일을 식별하는 기본키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 5,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "실제 파일명으로, 저장된 파일명과 달리 사용자가 인지하는 원본 파일명을 의미합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 6,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "파일의 콘텐츠 유형을 나타내는 컬럼이나, 현재 모든 값이 NULL로 실제 사용되지 않고 있습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WK_ORD_NO",
+          "CD_PROCE",
+          "FACTORY",
+          "FILE_NM"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 17,
+      "sampleSize": 17,
+      "columnProfiles": [
+        {
+          "name": "WK_ORD_NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 17,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "WRK-250219-010",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "WRK-250219-0112",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "WRK-250219-0110",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "WRK-250310-0001",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "WRK-250218-QA02-0046",
+              "count": 1,
+              "ratio": 0.0588
+            }
+          ]
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 2,
+          "cardinality": 0.1176,
+          "topValues": [
+            {
+              "value": "QA01",
+              "count": 10,
+              "ratio": 0.5882
+            },
+            {
+              "value": "QA02",
+              "count": 7,
+              "ratio": 0.4118
+            }
+          ]
+        },
+        {
+          "name": "FACTORY",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0588,
+          "topValues": [
+            {
+              "value": "01",
+              "count": 17,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "FILE_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 17,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "10251",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "10005",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "86207",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "90642",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "4226",
+              "count": 1,
+              "ratio": 0.0588
+            }
+          ]
+        },
+        {
+          "name": "OGN_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 16,
+          "cardinality": 0.9412,
+          "topValues": [
+            {
+              "value": "carp_ep1_title.jpg",
+              "count": 2,
+              "ratio": 0.1176
+            },
+            {
+              "value": "Img_1739945503357.jpg",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "Img_1739945642100.jpg",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "Img_1739946069798.jpg",
+              "count": 1,
+              "ratio": 0.0588
+            },
+            {
+              "value": "Img_1741594834526.jpg",
+              "count": 1,
+              "ratio": 0.0588
+            }
+          ]
+        },
+        {
+          "name": "FILE_TYPE",
+          "nullCount": 17,
+          "nullRatio": 1.0,
+          "uniqueCount": 0,
+          "cardinality": 0.0
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WK_ORD_NO",
+        "CD_PROCE",
+        "FACTORY",
+        "FILE_NM",
+        "OGN_NM",
+        "FILE_TYPE"
+      ],
+      "rows": [
+        [
+          "WRK-250310-0006",
+          "QA01",
+          "01",
+          "32739",
+          "Img_1741594834526.jpg",
+          null
+        ],
+        [
+          "WRK-250310-0005",
+          "QA02",
+          "01",
+          "42684",
+          "Img_1741595514197.jpg",
+          null
+        ],
+        [
+          "WRK-250219-0110",
+          "QA01",
+          "01",
+          "56348",
+          "Img_1739953749644.jpg",
+          null
+        ],
+        [
+          "***MASKED***",
+          "QA02",
+          "01",
+          "98654",
+          "Img_1739944930241.jpg",
+          null
+        ],
+        [
+          "***MASKED***",
+          "QA01",
+          "01",
+          "10251",
+          "Img_1739945503357.jpg",
+          null
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES00_RFID",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES00_RFID",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "이 테이블은 제조 실행 시스템(MES) 내 RFID 리딩 현황을 관리하는 업무 영역의 데이터입니다. 주요 목적은 각 시점별로 RFID 신호를 기록하여 생산 현장의 자산 및 작업 흐름을 추적하는 데 있으며, 30개의 RFID 리딩 값을 시간별로 저장합니다. 다른 생산 관리 데이터와 연계되어 실시간 자산 위치 확인 및 공정 모니터링에 활용됩니다.",
+    "rowCount": 113,
+    "lastUpdated": "2025-08-26 01:22:24",
+    "columns": [
+      {
+        "name": "WRT_DTIME",
+        "dataType": "timestamp",
+        "dataTypeDisplay": "timestamp",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "RFID 신호가 발생한 정확한 시점을 기록하는 고유 식별자 역할의 타임스탬프입니다.",
+        "defaultValue": "CURRENT_TIMESTAMP",
+        "characterMaxLength": null,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R01",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R01에서 감지된 신호 값으로, 신호 부재 시 'NO_SIG'로 표시됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R02",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R02에서 감지된 신호 값으로, 신호 상태를 모니터링하는 데 사용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R03",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R03에서 수집된 신호 데이터로, 설비별 RFID 상태 확인에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R04",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 5,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R04에서 감지된 신호 정보를 저장하며, 생산 현황 추적에 기여합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R05",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 6,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R05의 신호 상태를 나타내며, 정상 신호 또는 부재 상태를 기록합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R06",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 7,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R06에서 수집된 신호 값으로, 설비별 RFID 리딩 현황을 반영합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R07",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 8,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R07에서 감지된 신호 데이터로, 생산 라인 모니터링에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R08",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 9,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R08의 신호 상태를 기록하며, 신호 부재 시 'NO_SIG'로 표시됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R09",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 10,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R09에서 수집된 신호 값으로, 설비별 RFID 신호 상태를 나타냅니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R10",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 11,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R10에서 감지된 신호 정보를 저장하며, 생산 공정 추적에 사용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R11",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 12,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R11의 신호 상태를 기록하여, 설비별 RFID 리딩 현황을 관리합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R12",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 13,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R12에서 수집된 신호 값으로, 생산 라인별 신호 상태 확인에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R13",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 14,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R13에서 감지된 신호 데이터를 저장하며, 신호 부재 여부를 포함합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R14",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 15,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R14의 신호 상태를 기록하여, 생산 현황 모니터링에 기여합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R15",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 16,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R15에서 수집된 신호 값으로, 설비별 RFID 신호 상태를 반영합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R16",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 17,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R16에서 감지된 신호 정보를 저장하며, 생산 공정 추적에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R17",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 18,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R17의 신호 상태를 기록하여, 설비별 RFID 리딩 현황을 관리합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R18",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 19,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R18에서 수집된 신호 값으로, 생산 라인별 신호 상태 확인에 사용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R19",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 20,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R19에서 감지된 신호 데이터를 저장하며, 신호 부재 여부를 포함합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R20",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 21,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R20의 신호 상태를 기록하여, 생산 현황 모니터링에 기여합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R21",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 22,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R21에서 수집된 신호 값으로, 설비별 RFID 신호 상태를 반영합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R22",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 23,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R22에서 감지된 신호 정보를 저장하며, 생산 공정 추적에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R23",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 24,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R23의 신호 상태를 기록하여, 설비별 RFID 리딩 현황을 관리합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R24",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 25,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R24에서 수집된 신호 값으로, 생산 라인별 신호 상태 확인에 사용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R25",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 26,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R25에서 감지된 신호 데이터를 저장하며, 신호 부재 여부를 포함합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R26",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 27,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R26의 신호 상태를 기록하여, 생산 현황 모니터링에 기여합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R27",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 28,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R27에서 수집된 신호 값으로, 설비별 RFID 신호 상태를 반영합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R28",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 29,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R28에서 감지된 신호 정보를 저장하며, 생산 공정 추적에 활용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R29",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 30,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R29의 신호 상태를 기록하여, 설비별 RFID 리딩 현황을 관리합니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "R30",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 31,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "RFID 리더기 R30에서 수집된 신호 값으로, 생산 라인별 신호 상태 확인에 사용됩니다.",
+        "defaultValue": "NO_SIG",
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WRT_DTIME"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 113,
+      "sampleSize": 113,
+      "columnProfiles": [
+        {
+          "name": "WRT_DTIME",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 113,
+          "cardinality": 1.0
+        },
+        {
+          "name": "R01",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 18,
+          "cardinality": 0.1593,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 50,
+              "ratio": 0.4425
+            },
+            {
+              "value": "2025-07-30:10:48:45",
+              "count": 12,
+              "ratio": 0.1062
+            },
+            {
+              "value": "2025-07-30:10:42:11",
+              "count": 10,
+              "ratio": 0.0885
+            },
+            {
+              "value": "2025-07-30:10:13:39",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-08-01:15:25:19",
+              "count": 7,
+              "ratio": 0.0619
+            }
+          ]
+        },
+        {
+          "name": "R02",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 48,
+              "ratio": 0.4248
+            },
+            {
+              "value": "2025-07-30:10:48:47",
+              "count": 12,
+              "ratio": 0.1062
+            },
+            {
+              "value": "2025-07-30:10:42:11",
+              "count": 10,
+              "ratio": 0.0885
+            },
+            {
+              "value": "2025-07-30:10:13:39",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-08-01:15:25:19",
+              "count": 7,
+              "ratio": 0.0619
+            }
+          ]
+        },
+        {
+          "name": "R03",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 50,
+              "ratio": 0.4425
+            },
+            {
+              "value": "2025-07-30:10:48:50",
+              "count": 11,
+              "ratio": 0.0973
+            },
+            {
+              "value": "2025-07-30:10:42:14",
+              "count": 9,
+              "ratio": 0.0796
+            },
+            {
+              "value": "2025-07-30:10:13:42",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-08-01:15:25:21",
+              "count": 7,
+              "ratio": 0.0619
+            }
+          ]
+        },
+        {
+          "name": "R04",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 51,
+              "ratio": 0.4513
+            },
+            {
+              "value": "2025-07-30:10:48:52",
+              "count": 11,
+              "ratio": 0.0973
+            },
+            {
+              "value": "2025-07-30:10:42:17",
+              "count": 9,
+              "ratio": 0.0796
+            },
+            {
+              "value": "2025-07-30:10:13:42",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-07-30:10:53:48",
+              "count": 7,
+              "ratio": 0.0619
+            }
+          ]
+        },
+        {
+          "name": "R05",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 56,
+              "ratio": 0.4956
+            },
+            {
+              "value": "2025-07-30:10:48:55",
+              "count": 10,
+              "ratio": 0.0885
+            },
+            {
+              "value": "2025-07-30:10:42:17",
+              "count": 9,
+              "ratio": 0.0796
+            },
+            {
+              "value": "2025-07-30:10:13:45",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-08-01:15:25:24",
+              "count": 6,
+              "ratio": 0.0531
+            }
+          ]
+        },
+        {
+          "name": "R06",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 57,
+              "ratio": 0.5044
+            },
+            {
+              "value": "2025-07-30:10:48:57",
+              "count": 10,
+              "ratio": 0.0885
+            },
+            {
+              "value": "2025-07-30:10:42:20",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-07-30:10:13:45",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-08-01:15:25:24",
+              "count": 6,
+              "ratio": 0.0531
+            }
+          ]
+        },
+        {
+          "name": "R07",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 18,
+          "cardinality": 0.1593,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 60,
+              "ratio": 0.531
+            },
+            {
+              "value": "2025-07-30:10:49:00",
+              "count": 9,
+              "ratio": 0.0796
+            },
+            {
+              "value": "2025-07-30:10:42:24",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-07-30:10:13:47",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-08-01:15:25:26",
+              "count": 6,
+              "ratio": 0.0531
+            }
+          ]
+        },
+        {
+          "name": "R08",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 19,
+          "cardinality": 0.1681,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 59,
+              "ratio": 0.5221
+            },
+            {
+              "value": "2025-07-30:10:49:03",
+              "count": 9,
+              "ratio": 0.0796
+            },
+            {
+              "value": "2025-07-30:10:42:57",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-07-30:10:13:47",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-08-01:15:25:26",
+              "count": 6,
+              "ratio": 0.0531
+            }
+          ]
+        },
+        {
+          "name": "R09",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 18,
+          "cardinality": 0.1593,
+          "topValues": [
+            {
+              "value": "NO_SIG",
+              "count": 65,
+              "ratio": 0.5752
+            },
+            {
+              "value": "2025-07-30:10:49:05",
+              "count": 8,
+              "ratio": 0.0708
+            },
+            {
+              "value": "2025-07-30:10:43:00",
+              "count": 7,
+              "ratio": 0.0619
+            },
+            {
+              "value": "2025-07-30:10:14:03",
+              "count": 6,
+              "ratio": 0.0531
+            },
+            {
+              "value": "2025-08-01:15:25:29",
+              "count": 5,
+              "ratio": 0.0442
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WRT_DTIME",
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19",
+        "R20",
+        "R21",
+        "R22",
+        "R23",
+        "R24",
+        "R25",
+        "R26",
+        "R27",
+        "R28",
+        "R29",
+        "R30"
+      ],
+      "rows": [
+        [
+          "2025-07-30 01:49:05",
+          "2025-07-30:10:48:45",
+          "2025-07-30:10:48:47",
+          "2025-07-30:10:48:50",
+          "2025-07-30:10:48:52",
+          "2025-07-30:10:48:55",
+          "2025-07-30:10:48:57",
+          "2025-07-30:10:49:00",
+          "2025-07-30:10:49:03",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG"
+        ],
+        [
+          "2025-07-30 01:05:36",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG"
+        ],
+        [
+          "2025-07-30 01:51:23",
+          "2025-07-30:10:51:08",
+          "2025-07-30:10:51:11",
+          "2025-07-30:10:51:11",
+          "2025-07-30:10:51:14",
+          "2025-07-30:10:51:14",
+          "2025-07-30:10:51:16",
+          "2025-07-30:10:51:16",
+          "2025-07-30:10:51:16",
+          "2025-07-30:10:51:19",
+          "2025-07-30:10:51:19",
+          "2025-07-30:10:51:21",
+          "2025-07-30:10:51:21",
+          "2025-07-30:10:51:21",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG"
+        ],
+        [
+          "2025-07-30 01:48:48",
+          "2025-07-30:10:48:45",
+          "2025-07-30:10:48:47",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG",
+          "NO_SIG"
+        ],
+        [
+          "2025-02-26 03:50:28",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:24",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27",
+          "2025-02-26:12:50:27"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_CD_EQUIP",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_CD_EQUIP",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "IIoT 센서 및 장비에서 수집된 CVM 데이터를 저장하는 테이블로, 실시간 설비 상태 및 성능 모니터링에 사용됩니다. 설비 코드 테이블과 연계되어 특정 설비의 운영 데이터를 분석하는 데 기초 자료를 제공합니다.",
+    "rowCount": 44,
+    "lastUpdated": "2025-08-26 01:22:26",
+    "columns": [
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "설비를 고유하게 식별하는 코드로, 각 설비별로 중복 없이 부여된 기본키입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NM_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(50)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "설비의 명칭으로, 설비를 업무상 구분하고 식별하는 데 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 50,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "설비가 속한 공정의 코드를 나타내며, 공정 마스터 테이블과 연계되어 설비의 공정 정보를 참조합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "설비의 사용 상태를 표시하는 코드로, 현재는 모두 사용 중임을 의미하는 '1' 값만 존재합니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "IS_LOCAL",
+        "dataType": "tinyint",
+        "dataTypeDisplay": "tinyint",
+        "ordinalPosition": 5,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "설비가 국내에 위치한지(0) 또는 현지에 위치한지(1)를 구분하는 값으로, 설비의 위치 특성을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 3,
+        "numericScale": 0
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "CD_EQUIP"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 44,
+      "sampleSize": 44,
+      "columnProfiles": [
+        {
+          "name": "CD_EQUIP",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 44,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "INS-2-5",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "INS-2-3",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "INS-2-4",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "INS-2-2",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "INS-2-6",
+              "count": 1,
+              "ratio": 0.0227
+            }
+          ]
+        },
+        {
+          "name": "NM_EQUIP",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 44,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "절단압착_자동_1",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "절단압착_자동_2",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "절단압착_자동_3",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "절단압착_자동_4",
+              "count": 1,
+              "ratio": 0.0227
+            },
+            {
+              "value": "절단압착_수동_1",
+              "count": 1,
+              "ratio": 0.0227
+            }
+          ]
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 7,
+          "cardinality": 0.1591,
+          "topValues": [
+            {
+              "value": "PR04",
+              "count": 20,
+              "ratio": 0.4545
+            },
+            {
+              "value": "PR01",
+              "count": 10,
+              "ratio": 0.2273
+            },
+            {
+              "value": "PR05",
+              "count": 4,
+              "ratio": 0.0909
+            },
+            {
+              "value": "PR03",
+              "count": 4,
+              "ratio": 0.0909
+            },
+            {
+              "value": "PR02",
+              "count": 2,
+              "ratio": 0.0455
+            }
+          ]
+        },
+        {
+          "name": "KD_USING",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0227,
+          "topValues": [
+            {
+              "value": "1",
+              "count": 44,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "IS_LOCAL",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 2,
+          "cardinality": 0.0455,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.0455,
+          "stddev": 0.2083
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "CD_EQUIP",
+        "NM_EQUIP",
+        "CD_PROCE",
+        "KD_USING",
+        "IS_LOCAL"
+      ],
+      "rows": [
+        [
+          "FINAL-04",
+          "후작업라인4",
+          "PR05",
+          "1",
+          "0"
+        ],
+        [
+          "FOAM-01",
+          "준비라인1",
+          "PR02",
+          "1",
+          "0"
+        ],
+        [
+          "Indonesia",
+          "인도네시아 설비",
+          "PR01",
+          "1",
+          "1"
+        ],
+        [
+          "FINAL-01",
+          "후작업라인1",
+          "PR05",
+          "1",
+          "0"
+        ],
+        [
+          "TEST_01",
+          "해외 설비_test",
+          "PR01",
+          "1",
+          "1"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_CD_PROC",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_CD_PROC",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "성창사의 공정 코드를 관리하는 테이블로, 생산 공정별 식별 정보를 저장합니다. 설비 코드와 함께 공정 흐름을 정의하며, 설비별 공정 데이터 연계 및 분석에 활용됩니다.",
+    "rowCount": 9,
+    "lastUpdated": "2025-08-26 01:22:27",
+    "columns": [
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공정코드로, 각 공정을 고유하게 식별하는 기본키 역할을 하며 시스템 내 공정 정보를 참조할 때 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NM_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(50)",
+        "ordinalPosition": 2,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "공정명을 나타내며, 각 공정코드에 대응하는 공정의 명칭을 저장하여 업무상 공정 구분과 이해를 돕습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 50,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "공정의 사용여부를 표시하는 값으로, '1'은 사용 중, '0'은 사용 중지 상태를 나타내어 공정 관리에 활용됩니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "CD_PROCE"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 9,
+      "sampleSize": 9,
+      "columnProfiles": [
+        {
+          "name": "CD_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 9,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "PR00",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "PR01",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "PR02",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "PR03",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "PR04",
+              "count": 1,
+              "ratio": 0.1111
+            }
+          ]
+        },
+        {
+          "name": "NM_PROCE",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 9,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "구매입고",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "절단/압착",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "조립준비",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "조립",
+              "count": 1,
+              "ratio": 0.1111
+            },
+            {
+              "value": "통전검사",
+              "count": 1,
+              "ratio": 0.1111
+            }
+          ]
+        },
+        {
+          "name": "KD_USING",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 2,
+          "cardinality": 0.2222,
+          "topValues": [
+            {
+              "value": "1",
+              "count": 7,
+              "ratio": 0.7778
+            },
+            {
+              "value": "0",
+              "count": 2,
+              "ratio": 0.2222
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "CD_PROCE",
+        "NM_PROCE",
+        "KD_USING"
+      ],
+      "rows": [
+        [
+          "QA02",
+          "장력검사",
+          "1"
+        ],
+        [
+          "PR04",
+          "통전검사",
+          "1"
+        ],
+        [
+          "QA01",
+          "단면검사",
+          "1"
+        ],
+        [
+          "PR02",
+          "조립준비",
+          "1"
+        ],
+        [
+          "PR01",
+          "절단/압착",
+          "1"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_EMPLOYEE",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_EMPLOYEE",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "MES01_ITEM_MASTER 테이블은 성창사의 품목 정보를 관리하는 업무 영역으로, 제품의 기본 속성과 식별 정보를 저장합니다. 이 테이블은 품목 관련 모든 데이터의 중심이 되어, 사용자 정보 등 다른 참조 테이블과 연계되어 품목 관리 업무에 활용됩니다.",
+    "rowCount": 21,
+    "lastUpdated": "2025-08-26 01:22:29",
+    "columns": [
+      {
+        "name": "FACTORY",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공장코드로, 직원이 소속된 공장을 식별하는 기본키 컬럼입니다.",
+        "defaultValue": "01",
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EMPLO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "직원코드로, 각 직원을 고유하게 식별하는 기본키 컬럼입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NM_EMPLO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(20)",
+        "ordinalPosition": 3,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "직원의 이름을 저장하며, 직원 식별 및 업무 연락 시 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 20,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "TELMOBI",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(20)",
+        "ordinalPosition": 4,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "직원의 휴대전화 번호로, 긴급 연락 및 업무 커뮤니케이션에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 20,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "USER_ID",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 5,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "시스템 로그인 및 권한 관리를 위한 직원 고유 아이디입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 6,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "직원의 사용 여부를 나타내며, '1'은 사용 중, '0'은 사용 중지 상태를 의미합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FVT_USR_PASS",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(256)",
+        "ordinalPosition": 7,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "직원 계정의 패스워드로, MES 시스템 연동 시 기본값이 필요합니다.",
+        "defaultValue": "VXuIk4qYEmIaI0fNAZ5Pfg$$",
+        "characterMaxLength": 256,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FVT_CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 8,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "직원이 담당하는 설비의 코드로, 설비별 업무 배정을 위해 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "IS_LOCAL",
+        "dataType": "tinyint",
+        "dataTypeDisplay": "tinyint",
+        "ordinalPosition": 9,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "설비 위치 구분자로, '0'은 국내, '1'은 현지 설비임을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 3,
+        "numericScale": 0
+      },
+      {
+        "name": "USER_LV",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 10,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "직원의 사용자 권한 레벨로, '0'은 작업자, '1'은 관리자, '2'는 슈퍼관리자를 의미하며 MES 연동 시 기본값이 필요합니다.",
+        "defaultValue": "0",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "BRICK_ML_ID",
+        "dataType": "smallint",
+        "dataTypeDisplay": "smallint",
+        "ordinalPosition": 11,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "Brick-ML 시스템 연동용 직원 아이디로, 비밀번호 변경 등 연동 작업 시 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": null,
+        "numericPrecision": 5,
+        "numericScale": 0
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "FACTORY",
+          "CD_EMPLO"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 21,
+      "sampleSize": 21,
+      "columnProfiles": [
+        {
+          "name": "FACTORY",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0476,
+          "topValues": [
+            {
+              "value": "01",
+              "count": 21,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "CD_EMPLO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 21,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "EMP001",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "EMP002",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "EMP003",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "EMP004",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "EMP005",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        },
+        {
+          "name": "NM_EMPLO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 21,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "조립라인1 담당자",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "준비라인1 담당자",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "단면검사1 담당자",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "장력검사1담당자",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "후작업라인1담당자",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        },
+        {
+          "name": "TELMOBI",
+          "nullCount": 1,
+          "nullRatio": 0.0476,
+          "uniqueCount": 17,
+          "cardinality": 0.8095,
+          "topValues": [
+            {
+              "value": "***MASKED***",
+              "count": 3,
+              "ratio": 0.1429
+            },
+            {
+              "value": "",
+              "count": 2,
+              "ratio": 0.0952
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "***MASKED***",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        },
+        {
+          "name": "USER_ID",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 21,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "sungch",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "sungch2",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "sungch3",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "sungch4",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "sungch5",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        },
+        {
+          "name": "KD_USING",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 2,
+          "cardinality": 0.0952,
+          "topValues": [
+            {
+              "value": "1",
+              "count": 11,
+              "ratio": 0.5238
+            },
+            {
+              "value": "0",
+              "count": 10,
+              "ratio": 0.4762
+            }
+          ]
+        },
+        {
+          "name": "FVT_USR_PASS",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0476,
+          "topValues": [
+            {
+              "value": "VXuIk4qYEmIaI0fNAZ5Pfg$$",
+              "count": 21,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "FVT_CD_EQUIP",
+          "nullCount": 10,
+          "nullRatio": 0.4762,
+          "uniqueCount": 9,
+          "cardinality": 0.4286,
+          "topValues": [
+            {
+              "value": "",
+              "count": 3,
+              "ratio": 0.1429
+            },
+            {
+              "value": "SUB-01",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "FOAM-01",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "QA-1-1",
+              "count": 1,
+              "ratio": 0.0476
+            },
+            {
+              "value": "QA-2-1",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        },
+        {
+          "name": "IS_LOCAL",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0476,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": null,
+          "stddev": null
+        },
+        {
+          "name": "USER_LV",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 3,
+          "cardinality": 0.1429,
+          "topValues": [
+            {
+              "value": "1",
+              "count": 13,
+              "ratio": 0.619
+            },
+            {
+              "value": "0",
+              "count": 7,
+              "ratio": 0.3333
+            },
+            {
+              "value": "2",
+              "count": 1,
+              "ratio": 0.0476
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "FACTORY",
+        "CD_EMPLO",
+        "NM_EMPLO",
+        "TELMOBI",
+        "USER_ID",
+        "KD_USING",
+        "FVT_USR_PASS",
+        "FVT_CD_EQUIP",
+        "IS_LOCAL",
+        "USER_LV",
+        "BRICK_ML_ID"
+      ],
+      "rows": [
+        [
+          "01",
+          "EMP001",
+          "조립라인1 담당자",
+          "***MASKED***",
+          "sungch",
+          "1",
+          "***MASKED***",
+          "SUB-01",
+          "0",
+          "2",
+          "22"
+        ],
+        [
+          "01",
+          "SYS_009",
+          "관리자 테스트01",
+          "***MASKED***",
+          "test_001",
+          "0",
+          "***MASKED***",
+          null,
+          "0",
+          "1",
+          null
+        ],
+        [
+          "01",
+          "EMP003",
+          "단면검사1 담당자",
+          "***MASKED***",
+          "sungch3",
+          "1",
+          "***MASKED***",
+          "QA-1-1",
+          "0",
+          "0",
+          null
+        ],
+        [
+          "01",
+          "SYS_018",
+          "테스트7",
+          "***MASKED***",
+          "test7",
+          "0",
+          "***MASKED***",
+          null,
+          "0",
+          "1",
+          null
+        ],
+        [
+          "01",
+          "SYS_019",
+          "테스트8",
+          "***MASKED***",
+          "test8",
+          "0",
+          "***MASKED***",
+          null,
+          "0",
+          "1",
+          null
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_ITEM_MASTER",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_ITEM_MASTER",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "MES01_EMPLOYEE 테이블은 성창사 사용자 정보를 관리하며, 품목 관리 및 관련 업무를 수행하는 직원들의 기본 정보를 저장합니다. 이 테이블은 품목 정보와 연결되어 사용자별 권한 관리나 작업 이력 추적 등에 활용됩니다.",
+    "rowCount": 7149,
+    "lastUpdated": "2025-08-26 01:22:31",
+    "columns": [
+      {
+        "name": "FACTORY",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공장을 식별하는 코드로, 품목 정보가 속한 제조 공장을 구분하는 데 사용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "각 품목을 고유하게 식별하는 코드로, 품목별 데이터 관리 및 조회의 기본 키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "NM_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 3,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "품목의 명칭으로, 품목코드에 대응하는 실제 품목 이름을 나타내어 업무상 품목을 쉽게 식별할 수 있도록 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 4,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "품목의 사용 여부를 나타내는 코드로, 현재 해당 품목이 사용 중인지 여부를 구분하는 데 활용됩니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "FACTORY",
+          "CD_GITEM"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 7149,
+      "sampleSize": 7149,
+      "columnProfiles": [
+        {
+          "name": "FACTORY",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0001,
+          "topValues": [
+            {
+              "value": "01",
+              "count": 7149,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "CD_GITEM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 7149,
+          "cardinality": 1.0
+        },
+        {
+          "name": "NM_GITEM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 126,
+          "cardinality": 0.0176
+        },
+        {
+          "name": "KD_USING",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0001,
+          "topValues": [
+            {
+              "value": "1",
+              "count": 7149,
+              "ratio": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "FACTORY",
+        "CD_GITEM",
+        "NM_GITEM",
+        "KD_USING"
+      ],
+      "rows": [
+        [
+          "01",
+          "EAD66082305C22",
+          "HARNESS",
+          "1"
+        ],
+        [
+          "01",
+          "EAD65883201-SUB",
+          "HARNESS",
+          "1"
+        ],
+        [
+          "01",
+          "PWBR-10V-WGL1",
+          "HOUSING",
+          "1"
+        ],
+        [
+          "01",
+          "63610_2",
+          "TERMINAL",
+          "1"
+        ],
+        [
+          "01",
+          "EAD00580002C17",
+          "HARNESS",
+          "1"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_WRK_FILES",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_WRK_FILES",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "MES01_WRK_FILES 테이블은 제조 현장의 작업별 결과 파일 정보를 관리하는 업무 영역의 데이터입니다. 각 작업지시별로 생성된 파일의 저장명과 실제 파일명을 기록하여 작업 결과의 파일 이력을 체계적으로 저장합니다. MES01_WRK_ORDER 테이블과 WK_ORD_NO를 통해 연계되어, 작업지시별 결과 파일 관리 및 조회에 활용됩니다.",
+    "rowCount": 46,
+    "lastUpdated": "2025-08-26 01:22:33",
+    "columns": [
+      {
+        "name": "WK_ORD_NO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업 지시 번호로, 각 작업별 결과 파일을 고유하게 식별하는 기본키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FACTORY",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업이 수행된 공장을 나타내며, 단일 공장 코드로 고정되어 작업 파일과 공장 간의 관계를 명확히 합니다.",
+        "defaultValue": "01",
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 3,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "저장된 파일의 이름으로, 작업별 결과 파일을 고유하게 구분하는 기본키 구성 요소입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 4,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "실제 파일명으로, 저장된 파일과 사용자가 인지하는 원본 파일명을 연결하여 관리합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 5,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "파일의 콘텐츠 유형을 나타내는 컬럼이나 현재는 값이 없으며, 향후 파일 형식 구분에 활용될 수 있습니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WK_ORD_NO",
+          "FACTORY",
+          "FILE_NM"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 46,
+      "sampleSize": 46,
+      "columnProfiles": [
+        {
+          "name": "WK_ORD_NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 46,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "WO202531004315",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "test1234",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "TEST250212-0001",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "TEST_250213",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "WO202531104355",
+              "count": 1,
+              "ratio": 0.0217
+            }
+          ]
+        },
+        {
+          "name": "FACTORY",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0217,
+          "topValues": [
+            {
+              "value": "01",
+              "count": 46,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "FILE_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 46,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "36900",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "84320",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "7358",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "63738",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "60431",
+              "count": 1,
+              "ratio": 0.0217
+            }
+          ]
+        },
+        {
+          "name": "OGN_NM",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 46,
+          "cardinality": 1.0,
+          "topValues": [
+            {
+              "value": "VID_20250716_120205.mp4",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "VID_20250212_193433.mp4",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "Img_1740377821986.jpg",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "스크린샷 2025-05-20 145019.png",
+              "count": 1,
+              "ratio": 0.0217
+            },
+            {
+              "value": "",
+              "count": 1,
+              "ratio": 0.0217
+            }
+          ]
+        },
+        {
+          "name": "FILE_TYPE",
+          "nullCount": 46,
+          "nullRatio": 1.0,
+          "uniqueCount": 0,
+          "cardinality": 0.0
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WK_ORD_NO",
+        "FACTORY",
+        "FILE_NM",
+        "OGN_NM",
+        "FILE_TYPE"
+      ],
+      "rows": [
+        [
+          "WRK-250212-003",
+          "01",
+          "59566",
+          "Img_1739346159606.jpg",
+          null
+        ],
+        [
+          "TE20250213-001",
+          "01",
+          "4954",
+          "Img_1739413355816.jpg",
+          null
+        ],
+        [
+          "***MASKED***",
+          "01",
+          "58616",
+          "VID_20250604_133156.mp4",
+          null
+        ],
+        [
+          "TE20250213-002",
+          "01",
+          "42538",
+          "Img_1739414898781.jpg",
+          null
+        ],
+        [
+          "TE20250213-0001",
+          "01",
+          "39241",
+          "Img_1739425344611.jpg",
+          null
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  },
+  {
+    "name": "MES01_WRK_ORDER",
+    "fullyQualifiedName": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql.catalog-test-db.MES01_WRK_ORDER",
+    "service": "catalog-test-db_c7ug6ea6obh7_ap-southeast-2_rds_amazonaws_com_3306_mysql",
+    "database": "catalog-test-db",
+    "schema": "catalog-test-db",
+    "tableType": "Regular",
+    "description": "MES01_WRK_ORDER 테이블은 제조 공정의 작업지시 데이터를 관리하는 업무 영역의 핵심 테이블입니다. 작업지시번호, 공장코드, 품목, 공정, 설비, 작업자 정보와 함께 발주수량, 양품 및 불량 수량 등 생산 실적 정보를 저장하여 작업 진행 현황과 성과를 파악할 수 있습니다. MES01_WRK_FILES 테이블과 작업지시번호(WK_ORD_NO)를 기준으로 결과 파일과 연결되어 작업지시 데이터와 결과 파일 간 데이터 흐름을 지원합니다.",
+    "rowCount": 12746,
+    "lastUpdated": "2025-08-26 01:22:36",
+    "columns": [
+      {
+        "name": "WK_ORD_NO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 1,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "작업지시번호로, 각 작업지시를 고유하게 식별하는 기본키 역할을 합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FACTORY",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 2,
+        "nullable": false,
+        "isPrimaryKey": true,
+        "constraint": [
+          "NOT_NULL",
+          "PRIMARY_KEY"
+        ],
+        "description": "공장코드로, 작업이 수행된 공장을 나타내며 현재는 '01'로 고정되어 있습니다.",
+        "defaultValue": "01",
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "DT_WK_ORD",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 3,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업지시가 발행된 날짜를 나타내며, 작업 일정 관리에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_GITEM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 4,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "생산 대상 품목을 식별하는 코드로, 품목 마스터와 연계되어 품목 정보를 참조합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_PROCE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 5,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업이 진행되는 공정을 나타내는 코드로, 공정 마스터와 연계되어 공정 정보를 참조합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EQUIP",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 6,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업에 사용된 설비를 식별하는 코드로, 설비 마스터와 연계되어 설비 정보를 참조합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "CD_EMPLO",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(30)",
+        "ordinalPosition": 7,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업 담당 직원을 식별하는 코드로, 직원 마스터와 연계되어 담당자 정보를 참조합니다.",
+        "defaultValue": null,
+        "characterMaxLength": 30,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "ODR_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 8,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "해당 작업지시에 발주된 생산 수량으로, 생산 계획 및 실적 분석에 사용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "GOOD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 9,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "작업 완료 후 양품으로 인정된 수량으로, 품질 관리 및 생산 효율 분석에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "BAD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 10,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "작업 완료 후 불량으로 판정된 수량으로, 품질 문제 파악 및 개선 활동에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "FVT_GOOD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 11,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "FVT 기준으로 집계된 양품 수량으로, 특정 품질 기준에 따른 양품 실적을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "FVT_BAD_QT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 12,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "FVT 기준으로 집계된 불량 수량으로, 특정 품질 기준에 따른 불량 실적을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "DT_STD_END",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(10)",
+        "ordinalPosition": 13,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업 종료 예정일 또는 실제 종료일을 나타내며, 작업 일정 관리에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 10,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "OGN_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 14,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업 관련 원본 파일의 실제 이름으로, 현재는 사용 중지 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_NM",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 15,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "시스템에 저장된 작업 관련 파일의 이름으로, 현재는 사용 중지 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_TYPE",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(100)",
+        "ordinalPosition": 16,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "작업 관련 파일의 콘텐츠 유형을 나타내며, 현재는 사용 중지 예정입니다.",
+        "defaultValue": null,
+        "characterMaxLength": 100,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "KD_USING",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(1)",
+        "ordinalPosition": 17,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "사용 상태를 나타내는 코드로, 작업지시의 활성화 여부 등을 구분하는 데 사용됩니다.",
+        "defaultValue": "1",
+        "characterMaxLength": 1,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "TIME_ID",
+        "dataType": "varchar",
+        "dataTypeDisplay": "varchar(12)",
+        "ordinalPosition": 18,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "IIoT 데이터 동기화 시 사용되는 식별자로, 외부 시스템과의 연계에 활용됩니다.",
+        "defaultValue": null,
+        "characterMaxLength": 12,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "_timestamp",
+        "dataType": "timestamp",
+        "dataTypeDisplay": "timestamp",
+        "ordinalPosition": 19,
+        "nullable": true,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NULL"
+        ],
+        "description": "데이터 생성 또는 수정 시점의 타임스탬프로, 데이터 변경 이력 관리에 활용됩니다.",
+        "defaultValue": "CURRENT_TIMESTAMP",
+        "characterMaxLength": null,
+        "numericPrecision": null,
+        "numericScale": null
+      },
+      {
+        "name": "FILE_CNT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 20,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "작업지시와 관련된 결과 파일의 총 개수로, 파일 관리 및 검증에 활용됩니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "CVM_CNT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 21,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "CVM 형식의 결과 파일 개수로, 특정 유형의 결과 파일 수량을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      },
+      {
+        "name": "CFM_CNT",
+        "dataType": "int",
+        "dataTypeDisplay": "int",
+        "ordinalPosition": 22,
+        "nullable": false,
+        "isPrimaryKey": false,
+        "constraint": [
+          "NOT_NULL"
+        ],
+        "description": "CFM 형식의 결과 파일 개수로, 특정 유형의 결과 파일 수량을 나타냅니다.",
+        "defaultValue": "0",
+        "characterMaxLength": null,
+        "numericPrecision": 10,
+        "numericScale": 0
+      }
+    ],
+    "tableConstraints": [
+      {
+        "constraintType": "PRIMARY_KEY",
+        "constraintName": "PRIMARY",
+        "columns": [
+          "WK_ORD_NO",
+          "FACTORY"
+        ]
+      }
+    ],
+    "foreignKeys": [],
+    "dataProfile": {
+      "rowCount": 12674,
+      "sampleSize": 10000,
+      "columnProfiles": [
+        {
+          "name": "WK_ORD_NO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 10000,
+          "cardinality": 1.0,
+          "note": "Based on sample of 10000 rows"
+        },
+        {
+          "name": "FACTORY",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 1,
+          "cardinality": 0.0001,
+          "note": "Based on sample of 10000 rows",
+          "topValues": [
+            {
+              "value": "01",
+              "count": 10000,
+              "ratio": 1.0
+            }
+          ]
+        },
+        {
+          "name": "DT_WK_ORD",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 202,
+          "cardinality": 0.0202,
+          "note": "Based on sample of 10000 rows"
+        },
+        {
+          "name": "CD_GITEM",
+          "nullCount": 58,
+          "nullRatio": 0.0058,
+          "uniqueCount": 1764,
+          "cardinality": 0.1764,
+          "note": "Based on sample of 10000 rows"
+        },
+        {
+          "name": "CD_PROCE",
+          "nullCount": 1,
+          "nullRatio": 0.0001,
+          "uniqueCount": 6,
+          "cardinality": 0.0006,
+          "note": "Based on sample of 10000 rows",
+          "topValues": [
+            {
+              "value": "PR04",
+              "count": 5286,
+              "ratio": 0.5286
+            },
+            {
+              "value": "PR01",
+              "count": 3139,
+              "ratio": 0.3139
+            },
+            {
+              "value": "",
+              "count": 1121,
+              "ratio": 0.1121
+            },
+            {
+              "value": "PR03",
+              "count": 240,
+              "ratio": 0.024
+            },
+            {
+              "value": "PR02",
+              "count": 147,
+              "ratio": 0.0147
+            }
+          ]
+        },
+        {
+          "name": "CD_EQUIP",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 45,
+          "cardinality": 0.0045,
+          "note": "Based on sample of 10000 rows",
+          "topValues": [
+            {
+              "value": "CUT-A-01",
+              "count": 2166,
+              "ratio": 0.2166
+            },
+            {
+              "value": "INS-2-6",
+              "count": 601,
+              "ratio": 0.0601
+            },
+            {
+              "value": "INS-2-5",
+              "count": 595,
+              "ratio": 0.0595
+            },
+            {
+              "value": "CUT-A-04",
+              "count": 593,
+              "ratio": 0.0593
+            },
+            {
+              "value": "CUT-A-02",
+              "count": 471,
+              "ratio": 0.0471
+            }
+          ]
+        },
+        {
+          "name": "CD_EMPLO",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 65,
+          "cardinality": 0.0065,
+          "note": "Based on sample of 10000 rows",
+          "topValues": [
+            {
+              "value": "",
+              "count": 4959,
+              "ratio": 0.4959
+            },
+            {
+              "value": "PD12",
+              "count": 1049,
+              "ratio": 0.1049
+            },
+            {
+              "value": "QA2-5",
+              "count": 315,
+              "ratio": 0.0315
+            },
+            {
+              "value": "QA2-6",
+              "count": 311,
+              "ratio": 0.0311
+            },
+            {
+              "value": "PD6",
+              "count": 265,
+              "ratio": 0.0265
+            }
+          ]
+        },
+        {
+          "name": "ODR_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 692,
+          "cardinality": 0.0692,
+          "note": "Based on sample of 10000 rows",
+          "min": 1.0,
+          "max": 40000.0,
+          "mean": 439.461,
+          "stddev": 917.5788
+        },
+        {
+          "name": "GOOD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 946,
+          "cardinality": 0.0946,
+          "note": "Based on sample of 10000 rows",
+          "min": -20000.0,
+          "max": 40000.0,
+          "mean": 299.691,
+          "stddev": 1027.9944
+        },
+        {
+          "name": "BAD_QT",
+          "nullCount": 0,
+          "nullRatio": 0.0,
+          "uniqueCount": 67,
+          "cardinality": 0.0067,
+          "note": "Based on sample of 10000 rows",
+          "min": -513735.0,
+          "max": 2116319.0,
+          "mean": 961.6544,
+          "stddev": 41071.0991
+        }
+      ]
+    },
+    "sampleData": {
+      "columns": [
+        "WK_ORD_NO",
+        "FACTORY",
+        "DT_WK_ORD",
+        "CD_GITEM",
+        "CD_PROCE",
+        "CD_EQUIP",
+        "CD_EMPLO",
+        "ODR_QT",
+        "GOOD_QT",
+        "BAD_QT",
+        "FVT_GOOD_QT",
+        "FVT_BAD_QT",
+        "DT_STD_END",
+        "OGN_NM",
+        "FILE_NM",
+        "FILE_TYPE",
+        "KD_USING",
+        "TIME_ID",
+        "_timestamp",
+        "FILE_CNT",
+        "CVM_CNT",
+        "CFM_CNT"
+      ],
+      "rows": [
+        [
+          "WO202561012151",
+          "01",
+          "***MASKED***",
+          "EAD00567001C4",
+          "PR01",
+          "CUT-A-01",
+          "",
+          "195",
+          "195",
+          "0",
+          "0",
+          "0",
+          null,
+          null,
+          null,
+          null,
+          "1",
+          null,
+          "2025-06-10 14:09:50",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "WO202511402011",
+          "01",
+          "***MASKED***",
+          "EAD65922026",
+          "PR04",
+          "INS-2-2",
+          "",
+          "484",
+          "484",
+          "3",
+          "0",
+          "0",
+          "***MASKED***",
+          null,
+          null,
+          null,
+          "0",
+          null,
+          "2025-06-10 02:56:16",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "WO2024C0600972",
+          "01",
+          "***MASKED***",
+          "EAD61450637-IP",
+          "PR04",
+          "INS-1-2",
+          "",
+          "888",
+          "257",
+          "7",
+          "0",
+          "0",
+          "***MASKED***",
+          null,
+          null,
+          null,
+          "0",
+          null,
+          "2025-06-10 02:56:16",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "WO2024C1201165",
+          "01",
+          "***MASKED***",
+          "EAD61213435C42",
+          "PR01",
+          "CUT-A-03",
+          "",
+          "300",
+          "303",
+          "0",
+          "0",
+          "0",
+          "***MASKED***",
+          null,
+          null,
+          null,
+          "0",
+          null,
+          "2025-06-10 02:56:16",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "WO202561613240",
+          "01",
+          "***MASKED***",
+          "EAD65883301-FP",
+          "PR03",
+          "JOINT-01",
+          "PD6",
+          "50",
+          "50",
+          "0",
+          "0",
+          "0",
+          null,
+          null,
+          null,
+          null,
+          "1",
+          null,
+          "2025-06-16 10:47:53",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "note": "Sensitive data has been masked for privacy"
+    }
+  }
+]

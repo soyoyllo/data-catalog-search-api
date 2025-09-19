@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  metadata-search-api:
+    build: .
+    container_name: data-catalog-search-api
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./faiss_indices:/app/faiss_indices
+      - ./metadata:/app/metadata # metadata 폴더도 볼륨으로 연결하는 것이 좋습니다.
+    
+    # --- 👇 [핵심] 여기에 환경 변수를 설정합니다. ---
+    environment:
+      # 이 변수는 컨테이너 내부에서 os.getenv("OPENMETADATA_BASE_URL")로 읽을 수 있습니다.
+      - OPENMETADATA_BASE_URL=https://de4f5334deb3.ngrok-free.app/
+      
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
