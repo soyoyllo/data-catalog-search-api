@@ -168,3 +168,5 @@ Thumbs.db
 tmp/
 temp/
 github-actions-key*
+github-actions-key*
+.cursor/
