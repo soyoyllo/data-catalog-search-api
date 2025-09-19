@@ -1,0 +1,178 @@
+---
+description: 프로젝트 구조 분석 및 설정 파일 경로 관리 가이드
+globs: **/*
+alwaysApply: true
+---
+
+# 프로젝트 구조 분석 및 설정 파일 경로 관리 가이드
+
+## 🔍 프로젝트 구조 분석 체크리스트
+
+### 1. **프로젝트 루트 디렉토리 확인**
+작업 시작 전 반드시 확인해야 할 사항:
+
+```bash
+# 현재 디렉토리 확인
+pwd
+
+# 프로젝트 루트 파일들 확인
+ls -la
+```
+
+**프로젝트 루트에 있어야 할 핵심 파일들:**
+- [ ] `main.py` 또는 `app.py` (메인 애플리케이션)
+- [ ] `pyproject.toml` 또는 `requirements.txt` (의존성 관리)
+- [ ] `README.md` (프로젝트 문서)
+- [ ] `.gitignore` (Git 무시 파일)
+
+### 2. **폴더 구조 파악**
+```bash
+# 전체 구조 확인
+tree -a -I '.git|__pycache__|*.pyc' -L 3
+
+# 또는 간단하게
+find . -type f -name "*.py" | head -10
+find . -name "pyproject.toml" -o -name "requirements.txt"
+```
+
+### 3. **설정 파일 위치 확인**
+```bash
+# Python 프로젝트 설정 파일들
+find . -name "pyproject.toml" -o -name "setup.py" -o -name "requirements.txt"
+
+# Docker 관련 파일들
+find . -name "Dockerfile" -o -name "docker-compose.yml"
+
+# CI/CD 파일들
+find . -name ".github" -type d
+```
+
+## 📁 폴더 구조 변경 시 업데이트해야 할 파일들
+
+### 1. **Python 프로젝트 설정**
+- [ ] `pyproject.toml` - 패키지 경로, 의존성 경로
+- [ ] `setup.py` - 패키지 경로 (있는 경우)
+- [ ] `requirements.txt` - 의존성 경로 (있는 경우)
+
+### 2. **Docker 설정**
+- [ ] `Dockerfile` - COPY 경로, WORKDIR
+- [ ] `docker-compose.yml` - 서비스 경로, 볼륨 마운트
+- [ ] `.dockerignore` - 무시할 파일 경로
+
+### 3. **CI/CD 설정**
+- [ ] `.github/workflows/*.yml` - 작업 경로, 빌드 컨텍스트
+- [ ] `Makefile` - 명령어 경로
+- [ ] `scripts/*.sh` - 스크립트 경로
+
+### 4. **문서**
+- [ ] `README.md` - 프로젝트 구조 섹션
+- [ ] `docs/*.md` - 관련 문서들
+- [ ] `CHANGELOG.md` - 변경사항 기록
+
+## 🔧 경로 업데이트 템플릿
+
+### pyproject.toml 업데이트
+```toml
+# 폴더 구조 변경 전
+[tool.hatch.build.targets.wheel]
+packages = ["api"]
+
+# 폴더 구조 변경 후
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = [
+    "main.py",
+    "src/",
+    "tests/",
+]
+```
+
+### Dockerfile 업데이트
+```dockerfile
+# 폴더 구조 변경 전
+COPY api/ ./api/
+WORKDIR /app/api
+
+# 폴더 구조 변경 후
+COPY . .
+WORKDIR /app
+```
+
+### GitHub Actions 업데이트
+```yaml
+# 폴더 구조 변경 전
+- name: Install dependencies
+  run: |
+    cd api
+    uv sync --dev
+
+# 폴더 구조 변경 후
+- name: Install dependencies
+  run: uv sync --dev
+```
+
+## ⚠️ 자주 발생하는 실수들
+
+### 1. **하위 폴더를 루트로 착각**
+```bash
+# ❌ 잘못된 예시
+cd /project/api
+# api 폴더를 프로젝트 루트로 착각하고 설정 파일 생성
+
+# ✅ 올바른 예시
+cd /project
+# 실제 프로젝트 루트에서 작업
+```
+
+### 2. **설정 파일 경로 업데이트 누락**
+```bash
+# 폴더 구조 변경 후 반드시 확인
+grep -r "api/" . --include="*.toml" --include="*.yml" --include="*.md"
+grep -r "src/" . --include="*.toml" --include="*.yml" --include="*.md"
+```
+
+### 3. **상대 경로 vs 절대 경로 혼동**
+```bash
+# ❌ 잘못된 예시 (절대 경로)
+COPY /Users/user/project/api/main.py .
+
+# ✅ 올바른 예시 (상대 경로)
+COPY main.py .
+```
+
+## 🎯 폴더 구조 변경 워크플로우
+
+### 1. **변경 전 준비**
+- [ ] 현재 구조 백업
+- [ ] 변경할 구조 계획
+- [ ] 영향받을 파일들 목록 작성
+
+### 2. **변경 실행**
+- [ ] 파일/폴더 이동
+- [ ] 설정 파일 경로 업데이트
+- [ ] 테스트 실행하여 검증
+
+### 3. **변경 후 검증**
+- [ ] 모든 설정 파일 경로 확인
+- [ ] 빌드/실행 테스트
+- [ ] README 업데이트
+- [ ] Git 커밋
+
+## 📋 체크리스트
+
+### 프로젝트 시작 시
+- [ ] 프로젝트 루트 디렉토리 확인
+- [ ] 핵심 파일들 위치 확인
+- [ ] 폴더 구조 전체 파악
+
+### 폴더 구조 변경 시
+- [ ] 모든 설정 파일 경로 업데이트
+- [ ] Docker 관련 파일 경로 수정
+- [ ] CI/CD 워크플로우 경로 수정
+- [ ] README 프로젝트 구조 섹션 업데이트
+- [ ] 테스트 실행하여 검증
+
+### 작업 완료 시
+- [ ] 모든 경로가 상대 경로로 설정되었는지 확인
+- [ ] 불필요한 절대 경로 제거
+- [ ] Git 커밋에서 깔끔한 경로 표시 확인

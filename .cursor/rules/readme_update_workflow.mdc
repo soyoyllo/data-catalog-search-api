@@ -1,0 +1,130 @@
+---
+description: 프로젝트 변경 시 README 파일 업데이트 워크플로우
+globs: README.md, **/*.md
+alwaysApply: true
+---
+
+# README 업데이트 워크플로우
+
+## 🚨 README 업데이트가 필요한 경우
+
+### 필수 업데이트 시점
+- [ ] **폴더 구조 변경** (파일 이동, 디렉토리 재구성)
+- [ ] **의존성 변경** (pyproject.toml, requirements.txt 수정)
+- [ ] **설정 파일 변경** (Dockerfile, docker-compose.yml, Makefile)
+- [ ] **CI/CD 워크플로우 변경** (.github/workflows/ 수정)
+- [ ] **새로운 기능 추가** (엔드포인트, 도구, 스크립트)
+- [ ] **환경 설정 변경** (uv, pip, conda 등)
+
+### README 업데이트 체크리스트
+
+#### 1. 프로젝트 구조 섹션
+```markdown
+## 📁 프로젝트 구조
+```
+- [ ] 변경된 폴더 구조 반영
+- [ ] 새로 추가된 파일/디렉토리 포함
+- [ ] 제거된 파일/디렉토리 제외
+
+#### 2. 설치 및 실행 섹션
+```markdown
+## 🚀 빠른 시작
+```
+- [ ] 새로운 의존성 관리 도구 반영 (uv, pip, conda)
+- [ ] 변경된 설치 명령어 업데이트
+- [ ] 실행 명령어 최신화
+
+#### 3. 개발 환경 섹션
+```markdown
+## 🛠️ 개발 환경
+```
+- [ ] Makefile 명령어 업데이트
+- [ ] Docker 명령어 변경사항 반영
+- [ ] 테스트 실행 방법 수정
+
+#### 4. CI/CD 섹션
+```markdown
+## 🔄 CI/CD
+```
+- [ ] GitHub Actions 워크플로우 설명 업데이트
+- [ ] 새로운 단계나 작업 추가
+- [ ] 환경 변수나 시크릿 변경사항 반영
+
+## 📝 README 업데이트 템플릿
+
+### 폴더 구조 변경 시
+```markdown
+## 📁 프로젝트 구조
+
+```
+프로젝트명/
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # GitHub Actions CI/CD
+├── tests/                      # 테스트 파일들
+│   ├── __init__.py
+│   └── test_main.py
+├── src/                        # 소스 코드 (변경된 경우)
+├── main.py                     # 메인 애플리케이션
+├── pyproject.toml              # 프로젝트 설정
+├── Dockerfile                  # Docker 설정
+├── Makefile                    # 개발 명령어
+└── README.md                   # 프로젝트 문서
+```
+```
+
+### 의존성 변경 시
+```markdown
+## 🚀 빠른 시작
+
+### 1. 의존성 설치
+```bash
+# uv 사용 (권장)
+uv sync --dev
+
+# 또는 pip 사용
+pip install -r requirements.txt
+```
+
+### 2. 개발 서버 실행
+```bash
+# uv 사용
+uv run uvicorn main:app --reload
+
+# 또는 직접 실행
+python main.py
+```
+```
+
+## ⚡ 자동 업데이트 스크립트
+
+### README 구조 검증
+```bash
+# README에 프로젝트 구조가 있는지 확인
+grep -q "## 📁 프로젝트 구조" README.md && echo "✅ 구조 섹션 존재" || echo "❌ 구조 섹션 누락"
+
+# pyproject.toml 의존성이 README에 반영되었는지 확인
+grep -q "uv sync" README.md && echo "✅ uv 명령어 반영" || echo "❌ uv 명령어 누락"
+```
+
+## 🎯 업데이트 우선순위
+
+1. **즉시 업데이트** (코드 변경과 동시에)
+   - 폴더 구조 변경
+   - 의존성 변경
+   - 설정 파일 변경
+
+2. **세션 종료 전 업데이트**
+   - 새로운 기능 추가
+   - 문서 개선사항
+
+3. **다음 세션 시작 전 확인**
+   - README 전체 검토
+   - 누락된 정보 보완
+
+## ⚠️ 주의사항
+
+- **README 업데이트는 선택사항이 아닌 필수사항**
+- **코드 변경과 README 업데이트는 동시에 진행**
+- **사용자가 변경사항을 확인할 수 있도록 명확하게 문서화**
+- **이전 버전과의 차이점을 명시**
