@@ -8,7 +8,6 @@ FastAPI 기반의 데이터 카탈로그 검색 서비스로, 벡터 유사도 �
 - **RESTful API**: FastAPI 기반의 자동 문서화된 API
 - **메타데이터 관리**: 테이블 및 컬럼 정보의 체계적 관리
 - **Docker 지원**: 컨테이너화된 배포 환경
-- **CI/CD**: GitHub Actions를 통한 자동화된 린팅, 테스트 및 배포
 - **uv 패키지 관리**: 빠르고 현대적인 Python 패키지 관리
 
 ## 🛠️ 기술 스택
@@ -18,10 +17,7 @@ FastAPI 기반의 데이터 카탈로그 검색 서비스로, 벡터 유사도 �
 - **uv**: 빠르고 현대적인 Python 패키지 관리자
 - **FAISS**: 벡터 검색 엔진
 - **Sentence Transformers**: 임베딩 모델
-- **LangChain**: LLM 통합 프레임워크
 - **Docker**: 컨테이너화
-- **GitHub Actions**: CI/CD
-- **pytest**: 간단한 테스트 프레임워크
 
 ## 📋 사전 요구사항
 
@@ -54,21 +50,17 @@ pip install uv
 ### 3. 의존성 설치
 
 ```bash
-# 개발 의존성 포함 설치
-uv sync --dev
-
-# 또는 Makefile 사용
-make install
+uv sync
 ```
 
-### 4. 개발 서버 실행
+### 4. 서버 실행
 
 ```bash
-# uv 사용
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# 개발 모드
+uv run python main.py
 
-# 또는 Makefile 사용
-make dev
+# 또는 직접 실행
+python main.py
 ```
 
 ### 5. API 문서 확인
@@ -84,107 +76,51 @@ make dev
 docker-compose up -d
 
 # 로그 확인
-make logs
+docker-compose logs -f
 
 # 서비스 중지
-make down
+docker-compose down
 ```
 
-### Docker 이미지 직접 빌드
+### Docker로 직접 실행
 
 ```bash
+# 이미지 빌드
 docker build -t data-catalog-search-api .
+
+# 컨테이너 실행
 docker run -p 8000:8000 data-catalog-search-api
 ```
 
-## 🧪 개발 및 테스트
+## 📡 API 사용법
 
-### 코드 포맷팅
-
-```bash
-# 코드 포맷팅
-make format
-
-# 린팅 검사
-make lint
-```
-
-### 테스트 실행
+### 검색 요청
 
 ```bash
-# 간단한 테스트 실행
-make test
+curl -X POST "http://localhost:8000/search" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "사용자 정보 테이블"}'
 ```
 
+### 응답 예시
 
-### 캐시 정리
-
-```bash
-make clean
-```
-
-## 📁 프로젝트 구조
-
-```
-data-catalog-search-api/
-├── .github/
-│   └── workflows/
-│       └── ci.yml              # GitHub Actions CI/CD
-├── tests/
-│   ├── __init__.py
-│   └── test_main.py            # 간단한 테스트
-├── metadata/                   # 메타데이터 파일들
-│   └── enriched_metadata_clustered.json
-├── faiss_indices/             # FAISS 인덱스 파일들
-│   └── faiss_index_e5_small/
-├── faiss_index_e5_small/      # FAISS 인덱스 (기존)
-├── main.py                    # FastAPI 애플리케이션
-├── pyproject.toml             # uv 프로젝트 설정
-├── uv.lock                    # 의존성 잠금 파일
-├── requirements.txt           # pip 호환성용 (레거시)
-├── Dockerfile                 # Docker 설정
-├── docker-compose.yml         # Docker Compose 설정
-├── Makefile                   # 개발 명령어
-├── README.md                  # 프로젝트 문서
-└── .gitignore                 # Git 무시 파일
-```
-
-## 🔧 환경 변수
-
-다음 환경 변수들을 설정할 수 있습니다:
-
-- `OPENMETADATA_BASE_URL`: OpenMetadata 기본 URL (기본값: https://de4f5334deb3.ngrok-free.app/)
-
-## 📊 API 엔드포인트
-
-### POST /search
-
-데이터 카탈로그를 검색합니다.
-
-**요청:**
-```json
-{
-  "query": "사용자 검색 쿼리"
-}
-```
-
-**응답:**
 ```json
 {
   "status": "success",
-  "original_query": "사용자 검색 쿼리",
+  "original_query": "사용자 정보 테이블",
+  "llm_response": "LLM 응답은 향후 추가될 예정입니다.",
   "results": [
     {
       "similarity_score": 0.95,
-      "table_name": "TABLE_NAME",
-      "table_description": "테이블 설명",
-      "openmetadata_url": "https://...",
+      "table_name": "users",
+      "table_description": "사용자 기본 정보를 저장하는 테이블",
+      "openmetadata_url": "https://example.com/table/users",
       "column_descriptions": [
         {
-          "column_name": "COLUMN_NAME",
-          "description": "컬럼 설명",
-          "data_type": "VARCHAR",
-          "is_primary_key": false
+          "column_name": "id",
+          "description": "사용자 고유 식별자",
+          "data_type": "INTEGER",
+          "is_primary_key": true
         }
       ]
     }
@@ -192,34 +128,57 @@ data-catalog-search-api/
 }
 ```
 
-## 🚀 CI/CD
+## 📁 프로젝트 구조
 
-이 프로젝트는 GitHub Actions를 사용하여 자동화된 CI/CD 파이프라인을 제공합니다:
+```
+data-catalog-search-api/
+├── main.py                 # FastAPI 애플리케이션
+├── pyproject.toml         # uv 프로젝트 설정
+├── uv.lock               # 의존성 버전 고정
+├── Dockerfile            # Docker 이미지 빌드
+├── docker-compose.yml    # Docker Compose 설정
+├── metadata/             # 메타데이터 파일들
+│   └── enriched_metadata_clustered.json
+└── README.md
+```
 
-- **테스트**: 간단한 pytest 테스트 실행 (앱 시작, 엔드포인트 존재 확인, OpenAPI 스키마 검증)
-- **린팅**: Black, isort, flake8, mypy 검사
-- **보안 스캔**: Safety, Bandit을 사용한 보안 검사
-- **Docker 빌드**: 자동 Docker 이미지 빌드 및 GitHub Container Registry 푸시
-- **배포**: 스테이징/프로덕션 환경 자동 배포
+## 🔧 개발
 
-## 🤝 기여하기
+### 의존성 관리
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Install dependencies (`make install`)
-4. Make your changes
-5. Run tests and linting (`make test && make lint`)
-6. Commit your changes (`git commit -m 'Add some amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+```bash
+# 새 패키지 추가
+uv add package-name
 
-## 📝 라이선스
+# 개발 의존성 추가
+uv add --dev package-name
 
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+# 의존성 업데이트
+uv sync
+```
 
-## 📞 지원
+### 코드 포맷팅
 
-문제가 발생하거나 질문이 있으시면 이슈를 생성해 주세요.
+```bash
+# Black으로 포맷팅
+uv run black .
 
----
-# Test
+# isort로 import 정렬
+uv run isort .
+```
+
+## 🚀 배포
+
+### VPN 서버 배포
+
+1. VPN 연결
+2. 서버에 접속
+3. 프로젝트 디렉토리로 이동
+4. Docker Compose로 배포
+
+```bash
+# 서버에서 실행
+git pull origin main
+docker-compose down
+docker-compose up -d --build
+```

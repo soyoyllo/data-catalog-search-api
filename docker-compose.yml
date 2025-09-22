@@ -1,6 +1,5 @@
-version: '3.8'
 services:
-  metadata-search-api:
+  data-catalog-search-api:
     build: .
     container_name: data-catalog-search-api
     restart: always

@@ -1,9 +1,0 @@
-# FastAPI 및 ASGI 서버
-fastapi
-uvicorn
-gunicorn
-
-# LangChain 및 벡터 DB 관련
-langchain-community
-faiss-cpu
-sentence-transformers

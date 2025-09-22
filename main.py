@@ -197,3 +197,7 @@ async def search_metadata(request: QueryRequest):
         logger.error(f"검색 중 오류 발생: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="검색 처리 중 내부 오류가 발생했습니다.")
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
