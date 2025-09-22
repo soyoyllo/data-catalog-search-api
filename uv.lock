@@ -121,6 +121,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "pydantic" },
     { name = "sentence-transformers" },
+    { name = "torch" },
     { name = "uvicorn" },
 ]
 
@@ -130,6 +131,7 @@ requires-dist = [
     { name = "fastapi" },
     { name = "pydantic" },
     { name = "sentence-transformers" },
+    { name = "torch" },
     { name = "uvicorn" },
 ]
 
