@@ -7,7 +7,7 @@ dependencies = [
     "fastapi",
     "uvicorn",
     "sentence-transformers",
-    "torch",
+    "langchain-community",
     "faiss-cpu",
     "pydantic",
 ]

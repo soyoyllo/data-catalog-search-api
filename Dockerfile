@@ -13,9 +13,6 @@ RUN pip install uv
 # uv 설정 파일 복사
 COPY pyproject.toml uv.lock* ./
 
-# CPU 전용 torch 설치
-RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
-
 # uv로 의존성 설치
 RUN uv sync --frozen --no-dev
 
