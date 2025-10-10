@@ -6,6 +6,7 @@ from typing import List, Dict, Optional
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
@@ -88,9 +89,34 @@ def search_and_format_results(query: str, vector_db: FAISS, all_metadata_dict: D
     if not similar_docs: return None
     
     found_tables = {}
-    threshold = 0.5
+    threshold = 0.3  # 70% 이상 관련도 (1 - 0.3 = 0.7 = 70%)  
+    
+    # 정확한 테이블명 매칭 우선순위 처리
+    query_upper = query.upper()
+    exact_match_found = False
+    
+    # 먼저 정확한 테이블명 매칭 확인
     for doc, score in similar_docs:
         table_name = doc.metadata['table_name']
+        table_name_upper = table_name.upper()
+        
+        # 정확한 테이블명 매칭 (대소문자 무시)
+        if query_upper == table_name_upper:
+            found_tables[table_name] = 0.0  # 정확한 매칭은 최고 점수
+            exact_match_found = True
+            logger.info(f"    -> 🎯 정확한 테이블명 매칭: '{table_name}' (점수: 0.0)")
+            break
+    
+    # 모든 벡터 검색 결과 처리 (정확한 매칭이 있어도 나머지 유사한 결과 포함)
+    for doc, score in similar_docs:
+        table_name = doc.metadata['table_name']
+        table_name_upper = table_name.upper()
+        
+        # 정확한 매칭은 이미 처리했으므로 건너뛰기
+        if exact_match_found and query_upper == table_name_upper:
+            continue
+            
+        # 임계값 통과하는 테이블들 추가
         if score < threshold:
             if table_name not in found_tables or score < found_tables[table_name]:
                 found_tables[table_name] = score
@@ -99,8 +125,9 @@ def search_and_format_results(query: str, vector_db: FAISS, all_metadata_dict: D
     if not found_tables and similar_docs:
         top_doc, top_score = similar_docs[0]
         table_name = top_doc.metadata['table_name']
-        found_tables[table_name] = top_score
-        logger.info(f"    -> ⚠️ 임계값 통과 결과 없음. 가장 유사한 '{table_name}'을(를) 대신 반환합니다.")
+        logger.info(f"    -> ❌ 임계값 통과 결과 없음. 가장 유사한 '{table_name}'의 점수: {top_score:.4f} (임계값: {threshold})")
+        logger.info(f"    -> 관련도가 충분하지 않아 결과를 반환하지 않습니다.")
+        return None  # 임계값을 넘는 결과가 없으면 빈 결과 반환
 
     results_list = []
     for table_name, score in sorted(found_tables.items(), key=lambda item: item[1]):
@@ -131,7 +158,7 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 서버 시작: 검색 엔진을 설정합니다...")
     
     # [추가] 환경 변수에서 OpenMetadata URL을 읽어옵니다.
-    OPENMETADATA_BASE_URL = os.getenv("OPENMETADATA_BASE_URL", "https://de4f5334deb3.ngrok-free.app/my-data")
+    OPENMETADATA_BASE_URL = os.getenv("OPENMETADATA_BASE_URL", "https://localhost:8585/my-data")
     search_engine_globals['openmetadata_base_url'] = OPENMETADATA_BASE_URL
     logger.info(f"OpenMetadata 기본 URL: {OPENMETADATA_BASE_URL}")
 
@@ -172,6 +199,15 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# --- CORS 설정 추가 ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 모든 도메인에서 접근 허용
+    allow_credentials=True,
+    allow_methods=["*"],  # 모든 HTTP 메서드 허용
+    allow_headers=["*"],  # 모든 헤더 허용
+)
+
 # --- API 엔드포인트 ---
 @app.post("/search", response_model=SearchResponse)
 async def search_metadata(request: QueryRequest):
@@ -196,8 +232,4 @@ async def search_metadata(request: QueryRequest):
     except Exception as e:
         logger.error(f"검색 중 오류 발생: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="검색 처리 중 내부 오류가 발생했습니다.")
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 
