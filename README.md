@@ -53,17 +53,27 @@ pip install uv
 uv sync
 ```
 
-### 4. 서버 실행
+### 4. 환경 변수 (.env) 설정
 
-```bash
-# 개발 모드
-uv run python main.py
+프로젝트 루트에 `.env` 파일을 만들고 아래 항목을 필요에 맞게 수정합니다.
 
-# 또는 직접 실행
-python main.py
+```
+OPENMETADATA_BASE_URL=https://openmetadata.example.com/my-data
+METADATA_FILE_PATH=metadata/enriched_metadata_clustered.json
+FAISS_INDEX_DIR=faiss_indices
 ```
 
-### 5. API 문서 확인
+### 5. 서버 실행
+
+```bash
+# 개발 모드 (uv)
+uv run python main.py
+
+# 생산형 실행 (gunicorn)
+uv run gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app -b 0.0.0.0:8000
+```
+
+### 6. API 문서 확인
 
 브라우저에서 `http://localhost:8000/docs`에 접속하여 Swagger UI를 확인할 수 있습니다.
 
@@ -89,10 +99,36 @@ docker-compose down
 docker build -t data-catalog-search-api .
 
 # 컨테이너 실행
-docker run -p 8000:8000 data-catalog-search-api
+docker run -p 8000:8000 \
+  -v $(pwd)/metadata:/app/metadata \
+  -v $(pwd)/faiss_indices:/app/faiss_indices \
+  --env-file .env \
+  data-catalog-search-api
 ```
 
 ## 📡 API 사용법
+
+### 메타데이터 갱신
+
+새로운 JSON을 반영하려면 `/update` 엔드포인트를 호출하십시오. 경로를 지정하지 않으면 `.env`에 설정된 `METADATA_FILE_PATH` 기준으로 변경 여부만 확인합니다.
+
+```bash
+curl -X POST "http://localhost:8000/update"
+```
+
+다른 JSON을 사용하려면 컨테이너 기준 경로를 `metadata_path`로 전달합니다.
+
+```bash
+curl -X POST "http://localhost:8000/update" \
+     -H "Content-Type: application/json" \
+     -d '{"metadata_path": "metadata/metadata_example.json"}'
+```
+
+응답 예시:
+
+```json
+{"status": "updated", "detail": "Metadata and FAISS index refreshed."}
+```
 
 ### 검색 요청
 
@@ -114,7 +150,7 @@ curl -X POST "http://localhost:8000/search" \
       "similarity_score": 0.95,
       "table_name": "users",
       "table_description": "사용자 기본 정보를 저장하는 테이블",
-      "openmetadata_url": "https://example.com/table/users",
+      "openmetadata_url": "https://openmetadata.example.com/my-data",
       "column_descriptions": [
         {
           "column_name": "id",
@@ -139,6 +175,7 @@ data-catalog-search-api/
 ├── docker-compose.yml    # Docker Compose 설정
 ├── metadata/             # 메타데이터 파일들
 │   └── enriched_metadata_clustered.json
+├── faiss_indices/        # 생성된 FAISS 인덱스 저장소
 └── README.md
 ```
 
@@ -156,25 +193,6 @@ uv add --dev package-name
 # 의존성 업데이트
 uv sync
 ```
-
-### 코드 포맷팅
-
-```bash
-# Black으로 포맷팅
-uv run black .
-
-# isort로 import 정렬
-uv run isort .
-```
-
-## 🚀 배포
-
-### VPN 서버 배포
-
-1. VPN 연결
-2. 서버에 접속
-3. 프로젝트 디렉토리로 이동
-4. Docker Compose로 배포
 
 ```bash
 # 서버에서 실행

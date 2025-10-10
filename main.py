@@ -2,13 +2,14 @@ import asyncio
 import json
 import logging
 import os
+import threading
 from contextlib import asynccontextmanager, suppress
 from typing import List, Dict, Optional
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores.utils import DistanceStrategy
@@ -44,6 +45,14 @@ class SearchResponse(BaseModel):
     # [추가] 향후 LLM 응답을 위한 필드 추가
     llm_response: Optional[str] = None
     results: Optional[List[TableSearchResult]] = None
+    
+class UpdateRequest(BaseModel):
+    metadata_path: Optional[str] = Field(
+        default="metadata/enriched_metadata_clustered.json",
+        description="컨테이너 기준 메타데이터 JSON 경로",
+        example="metadata/enriched_metadata_clustered.json"
+    )
+
 
 # --- 검색 엔진 로직 ---
 
@@ -154,9 +163,12 @@ def search_and_format_results(query: str, vector_db: FAISS, all_metadata_dict: D
 
 # --- FastAPI 앱 생명주기 및 전역 변수 설정 ---
 search_engine_globals = {}
+_index_refresh_lock = threading.Lock()
 
 DEFAULT_OPENMETADATA_URL = "http://localhost:8585/"
 CONFIG_FILE_ENV_VAR = "OPENMETADATA_CONFIG_FILE"
+METADATA_FILE_ENV_VAR = "METADATA_FILE_PATH"
+FAISS_INDEX_DIR_ENV_VAR = "FAISS_INDEX_DIR"
 
 
 def _read_openmetadata_url_from_file(config_path: Path) -> Optional[str]:
@@ -197,9 +209,98 @@ def load_openmetadata_base_url() -> str:
     return DEFAULT_OPENMETADATA_URL
 
 
+def derive_faiss_index_path(metadata_path: Path) -> Path:
+    base_dir = Path(os.getenv(FAISS_INDEX_DIR_ENV_VAR, "faiss_indices"))
+    safe_stem = metadata_path.stem.replace(" ", "_").replace(".", "_")
+    return base_dir / safe_stem
+
+
+def refresh_faiss_index_if_needed(metadata_path: Optional[Path] = None) -> Dict[str, str]:
+    """Rebuild the FAISS index if the metadata JSON changed.
+
+    Returns a dict with keys:
+        status: "updated" or "skipped"
+        detail: human-readable explanation
+    Raises HTTPException on hard failures (missing config, JSON error, etc.).
+    """
+    metadata_path = Path(metadata_path) if metadata_path else search_engine_globals.get('metadata_path')
+    embedding_model: Optional[SentenceTransformerEmbeddings] = search_engine_globals.get('embedding_model')
+
+    if metadata_path is None or embedding_model is None:
+        logger.error("메타데이터 경로 또는 인덱스 설정이 초기화되지 않았습니다.")
+        raise HTTPException(status_code=503, detail="Metadata or index configuration is missing.")
+
+    metadata_path = metadata_path if isinstance(metadata_path, Path) else Path(metadata_path)
+    metadata_mtime_map: Dict[str, float] = search_engine_globals.setdefault('metadata_mtime_map', {})
+    metadata_key = str(metadata_path.resolve())
+
+    path_changed = search_engine_globals.get('metadata_path') != metadata_path
+    if path_changed:
+        search_engine_globals['metadata_path'] = metadata_path
+        search_engine_globals['faiss_index_path'] = derive_faiss_index_path(metadata_path)
+        search_engine_globals['metadata_mtime'] = metadata_mtime_map.get(metadata_key)
+        search_engine_globals.pop('vector_db', None)
+
+    faiss_index_path: Optional[Path] = search_engine_globals.get('faiss_index_path')
+    if faiss_index_path is None:
+        faiss_index_path = derive_faiss_index_path(metadata_path)
+        search_engine_globals['faiss_index_path'] = faiss_index_path
+
+    try:
+        current_mtime = metadata_path.stat().st_mtime
+    except FileNotFoundError:
+        msg = f"메타데이터 파일 '{metadata_path}'을 찾을 수 없습니다."
+        logger.error(msg)
+        raise HTTPException(status_code=404, detail=msg)
+
+    last_mtime = search_engine_globals.get('metadata_mtime')
+    index_exists = faiss_index_path.exists()
+    if not path_changed and index_exists and last_mtime and current_mtime <= last_mtime:
+        return {"status": "skipped", "detail": "Metadata unchanged."}
+
+    with _index_refresh_lock:
+        last_mtime = search_engine_globals.get('metadata_mtime')
+        index_exists = faiss_index_path.exists()
+        if path_changed and index_exists:
+            cached_mtime = metadata_mtime_map.get(metadata_key)
+            if cached_mtime and current_mtime <= cached_mtime:
+                logger.info("📂 기존 FAISS 인덱스를 로드합니다: %s", faiss_index_path)
+                metadata = load_metadata(metadata_path)
+                search_engine_globals['metadata_dict'] = {table['name']: table for table in metadata}
+
+                search_engine_globals['vector_db'] = FAISS.load_local(
+                    str(faiss_index_path),
+                    embedding_model,
+                    allow_dangerous_deserialization=True,
+                    distance_strategy=DistanceStrategy.COSINE
+                )
+                search_engine_globals['metadata_mtime'] = cached_mtime
+                return {"status": "loaded", "detail": "Existing FAISS index loaded for metadata path."}
+
+        if not path_changed and index_exists and last_mtime and current_mtime <= last_mtime:
+            return {"status": "skipped", "detail": "Metadata unchanged."}
+
+        logger.info("📁 메타데이터 파일 변경 감지. FAISS 인덱스를 재생성합니다...")
+        try:
+            metadata = load_metadata(metadata_path)
+        except json.JSONDecodeError as exc:
+            msg = f"메타데이터 JSON 파싱 실패: {exc}"
+            logger.error(msg)
+            raise HTTPException(status_code=400, detail=msg)
+
+        search_engine_globals['metadata_dict'] = {table['name']: table for table in metadata}
+
+        faiss_index_path.parent.mkdir(parents=True, exist_ok=True)
+        search_engine_globals['vector_db'] = create_and_save_faiss_index(metadata, faiss_index_path, embedding_model)
+        search_engine_globals['metadata_mtime'] = current_mtime
+        metadata_mtime_map[metadata_key] = current_mtime
+        logger.info("✅ 메타데이터 및 인덱스가 최신 상태로 갱신되었습니다.")
+        return {"status": "updated", "detail": "Metadata and FAISS index refreshed."}
+
+
 async def monitor_openmetadata_base_url():
     """Watch the config file for changes and refresh the OpenMetadata URL in realtime."""
-    config_file = Path(os.getenv(CONFIG_FILE_ENV_VAR, ".env"))
+    config_file = Path(os.getenv(CONFIG_FILE_ENV_VAR, ".env")).resolve()
     config_file.parent.mkdir(parents=True, exist_ok=True)
 
     watch_target = config_file if config_file.exists() else config_file.parent
@@ -209,8 +310,9 @@ async def monitor_openmetadata_base_url():
 
     async for changes in awatch(watch_target):
         relevant_change = False
+        config_path_resolved = config_file.resolve()
         for _change, changed_path in changes:
-            if Path(changed_path) == config_file:
+            if Path(changed_path).resolve() == config_path_resolved:
                 relevant_change = True
                 break
 
@@ -235,30 +337,48 @@ async def lifespan(app: FastAPI):
     search_engine_globals['openmetadata_base_url'] = initial_url
     logger.info(f"OpenMetadata 기본 URL: {initial_url}")
 
-    METADATA_FILE_PATH = Path('metadata/enriched_metadata_clustered.json')
-    FAISS_INDEX_PATH = Path("faiss_indices/faiss_index_e5_small") 
+    METADATA_FILE_PATH = Path(os.getenv(METADATA_FILE_ENV_VAR, 'metadata/enriched_metadata_clustered.json'))
+    FAISS_INDEX_PATH = derive_faiss_index_path(METADATA_FILE_PATH)
+
+    search_engine_globals['metadata_path'] = METADATA_FILE_PATH
+    search_engine_globals['faiss_index_path'] = FAISS_INDEX_PATH
 
     all_metadata = load_metadata(METADATA_FILE_PATH)
     search_engine_globals['metadata_dict'] = {table['name']: table for table in all_metadata}
     
     logger.info("E5-Small 임베딩 모델을 로드합니다...")
     embedding_model = SentenceTransformerEmbeddings(
-        model_name="intfloat/multilingual-e5-small"
+        model_name="intfloat/multilingual-e5-small",
+        model_kwargs={"device": "cpu"}
     )
-    
+    search_engine_globals['embedding_model'] = embedding_model
+
+    vector_db = None
     if not FAISS_INDEX_PATH.exists():
         FAISS_INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
         logger.warning(f"인덱스 파일 '{FAISS_INDEX_PATH}'를 찾을 수 없습니다. 새로 생성합니다.")
-        create_and_save_faiss_index(all_metadata, FAISS_INDEX_PATH, embedding_model)
+        vector_db = create_and_save_faiss_index(all_metadata, FAISS_INDEX_PATH, embedding_model)
     
-    logger.info(f"'{FAISS_INDEX_PATH}'에서 인덱스를 로드합니다...")
-    search_engine_globals['vector_db'] = FAISS.load_local(
-        str(FAISS_INDEX_PATH), 
-        embedding_model, 
-        allow_dangerous_deserialization=True,
-        distance_strategy=DistanceStrategy.COSINE 
-    )
+    if vector_db is None:
+        logger.info(f"'{FAISS_INDEX_PATH}'에서 인덱스를 로드합니다...")
+        vector_db = FAISS.load_local(
+            str(FAISS_INDEX_PATH), 
+            embedding_model, 
+            allow_dangerous_deserialization=True,
+            distance_strategy=DistanceStrategy.COSINE 
+        )
+
+    search_engine_globals['vector_db'] = vector_db
+
+    try:
+        search_engine_globals['metadata_mtime'] = METADATA_FILE_PATH.stat().st_mtime
+    except FileNotFoundError:
+        search_engine_globals['metadata_mtime'] = None
     
+    if search_engine_globals.get('metadata_mtime') is not None:
+        metadata_mtime_map = search_engine_globals.setdefault('metadata_mtime_map', {})
+        metadata_mtime_map[str(METADATA_FILE_PATH.resolve())] = search_engine_globals['metadata_mtime']
+
     logger.info("✅ 검색 엔진 준비 완료.")
 
     config_task = None
@@ -317,3 +437,16 @@ async def search_metadata(request: QueryRequest):
     except Exception as e:
         logger.error(f"검색 중 오류 발생: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="검색 처리 중 내부 오류가 발생했습니다.")
+
+@app.post("/update")
+async def trigger_metadata_refresh(body: UpdateRequest = UpdateRequest()):
+    logger.info("📦 /update 요청 수신: 메타데이터 및 인덱스를 갱신합니다.")
+
+    metadata_path = Path(body.metadata_path) if body.metadata_path else None
+    result = refresh_faiss_index_if_needed(metadata_path)
+
+    if 'vector_db' not in search_engine_globals:
+        logger.error("FAISS 인덱스가 초기화되지 않았습니다.")
+        raise HTTPException(status_code=503, detail="검색 엔진이 아직 준비되지 않았습니다.")
+
+    return result

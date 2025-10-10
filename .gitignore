@@ -156,10 +156,10 @@ Thumbs.db
 # Docker
 .dockerignore
 
-# FAISS indices (if large)
-# faiss_indices/
-# *.faiss
-# *.pkl
+# FAISS indices (generated)
+faiss_indices/
+*.faiss
+*.pkl
 
 # Metadata files (if sensitive)
 # metadata/
