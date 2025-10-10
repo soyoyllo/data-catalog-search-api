@@ -14,8 +14,17 @@ services:
       # 이 변수는 컨테이너 내부에서 os.getenv("OPENMETADATA_BASE_URL")로 읽을 수 있습니다.
       - OPENMETADATA_BASE_URL=https://de4f5334deb3.ngrok-free.app/
       
+    # --- 👇 [새로 추가] 도커 네트워크 설정 ---
+    networks:
+      - app_net
+    
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+
+# --- 👇 [새로 추가] 네트워크 정의 ---
+networks:
+  app_net:
+    external: true  # OpenMetadata의 app_net 네트워크를 사용
