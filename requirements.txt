@@ -7,3 +7,4 @@ gunicorn
 langchain-community
 faiss-cpu
 sentence-transformers
+watchfiles

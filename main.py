@@ -1,7 +1,8 @@
+import asyncio
 import json
 import logging
 import os
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import List, Dict, Optional
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from pydantic import BaseModel
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores.utils import DistanceStrategy
+from watchfiles import awatch
 
 # --- 로깅 설정 ---
 logging.basicConfig(level=logging.INFO)
@@ -153,14 +155,85 @@ def search_and_format_results(query: str, vector_db: FAISS, all_metadata_dict: D
 # --- FastAPI 앱 생명주기 및 전역 변수 설정 ---
 search_engine_globals = {}
 
+DEFAULT_OPENMETADATA_URL = "http://localhost:8585/"
+CONFIG_FILE_ENV_VAR = "OPENMETADATA_CONFIG_FILE"
+
+
+def _read_openmetadata_url_from_file(config_path: Path) -> Optional[str]:
+    """Parse a simple KEY=VALUE config file and extract OPENMETADATA_BASE_URL."""
+    if not config_path.exists():
+        return None
+
+    try:
+        with open(config_path, "r", encoding="utf-8") as cfg:
+            for raw_line in cfg:
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if line.startswith("OPENMETADATA_BASE_URL="):
+                    return line.split("=", 1)[1].strip()
+                # 단일 값만 있는 경우도 허용 (예: URL만 적어둔 파일)
+                if "=" not in line:
+                    return line
+    except Exception as exc:
+        logger.warning("설정 파일 '%s'을 읽는 중 오류: %s", config_path, exc)
+    return None
+
+
+def load_openmetadata_base_url() -> str:
+    """Resolve the current OpenMetadata base URL from environment or config file."""
+    # 1) 환경 변수 우선
+    env_override = os.getenv("OPENMETADATA_BASE_URL")
+    if env_override:
+        return env_override
+
+    # 2) 설정 파일에서 읽기
+    config_file = Path(os.getenv(CONFIG_FILE_ENV_VAR, ".env"))
+    file_value = _read_openmetadata_url_from_file(config_file)
+    if file_value:
+        return file_value
+
+    # 3) 기본값 반환
+    return DEFAULT_OPENMETADATA_URL
+
+
+async def monitor_openmetadata_base_url():
+    """Watch the config file for changes and refresh the OpenMetadata URL in realtime."""
+    config_file = Path(os.getenv(CONFIG_FILE_ENV_VAR, ".env"))
+    config_file.parent.mkdir(parents=True, exist_ok=True)
+
+    watch_target = config_file if config_file.exists() else config_file.parent
+    last_value = search_engine_globals.get("openmetadata_base_url")
+
+    logger.info("🔍 '%s' 감시를 시작합니다.", watch_target)
+
+    async for changes in awatch(watch_target):
+        relevant_change = False
+        for _change, changed_path in changes:
+            if Path(changed_path) == config_file:
+                relevant_change = True
+                break
+
+        if not relevant_change and watch_target == config_file:
+            # watch_target이 파일인데 다른 변경이면 무시
+            continue
+
+        current_value = _read_openmetadata_url_from_file(config_file) or DEFAULT_OPENMETADATA_URL
+        if current_value != last_value:
+            search_engine_globals["openmetadata_base_url"] = current_value
+            logger.info("🔁 OpenMetadata URL 업데이트: %s", current_value)
+            last_value = current_value
+        else:
+            logger.info("🔁 OpenMetadata 설정 파일이 갱신되었지만 URL은 변경되지 않았습니다.")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("🚀 서버 시작: 검색 엔진을 설정합니다...")
     
-    # [추가] 환경 변수에서 OpenMetadata URL을 읽어옵니다.
-    OPENMETADATA_BASE_URL = os.getenv("OPENMETADATA_BASE_URL", "https://localhost:8585/my-data")
-    search_engine_globals['openmetadata_base_url'] = OPENMETADATA_BASE_URL
-    logger.info(f"OpenMetadata 기본 URL: {OPENMETADATA_BASE_URL}")
+    # OpenMetadata URL 초기화 및 동적 갱신 태스크 시작
+    initial_url = load_openmetadata_base_url()
+    search_engine_globals['openmetadata_base_url'] = initial_url
+    logger.info(f"OpenMetadata 기본 URL: {initial_url}")
 
     METADATA_FILE_PATH = Path('metadata/enriched_metadata_clustered.json')
     FAISS_INDEX_PATH = Path("faiss_indices/faiss_index_e5_small") 
@@ -187,9 +260,21 @@ async def lifespan(app: FastAPI):
     )
     
     logger.info("✅ 검색 엔진 준비 완료.")
-    yield
-    search_engine_globals.clear()
-    logger.info("👋 서버 종료.")
+
+    config_task = None
+    if os.getenv("OPENMETADATA_BASE_URL"):
+        logger.info("환경 변수 OPENMETADATA_BASE_URL이 설정되어 있어 파일 변경 감시를 비활성화합니다.")
+    else:
+        config_task = asyncio.create_task(monitor_openmetadata_base_url())
+    try:
+        yield
+    finally:
+        if config_task:
+            config_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await config_task
+        search_engine_globals.clear()
+        logger.info("👋 서버 종료.")
 
 # --- FastAPI 앱 인스턴스 생성 ---
 app = FastAPI(
@@ -232,4 +317,3 @@ async def search_metadata(request: QueryRequest):
     except Exception as e:
         logger.error(f"검색 중 오류 발생: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="검색 처리 중 내부 오류가 발생했습니다.")
-

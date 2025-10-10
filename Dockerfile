@@ -13,6 +13,9 @@ COPY pyproject.toml uv.lock* ./
 # 5. uv를 사용하여 의존성 설치
 RUN uv sync --frozen --no-dev
 
+# 5-1. 기본 환경 파일이 없을 수 있으므로 빈 .env를 만들어 둡니다.
+RUN touch .env
+
 # 6. [수정] 필요한 파일 및 폴더만 명시적으로 복사
 # 앱 실행에 필요한 파이썬 코드 복사
 COPY main.py .
