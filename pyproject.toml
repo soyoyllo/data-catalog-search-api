@@ -12,6 +12,7 @@ dependencies = [
     "faiss-cpu",
     "pydantic",
     "watchfiles",
+    "langgraph-sdk>=0.2.9",
 ]
 
 [build-system]

@@ -4,12 +4,15 @@ import logging
 import os
 import threading
 from contextlib import asynccontextmanager, suppress
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+from langgraph_sdk import get_client
+from langgraph_sdk.client import LangGraphClient
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores.utils import DistanceStrategy
@@ -45,6 +48,20 @@ class SearchResponse(BaseModel):
     # [추가] 향후 LLM 응답을 위한 필드 추가
     llm_response: Optional[str] = None
     results: Optional[List[TableSearchResult]] = None
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., description="사용자 프롬프트")
+    thread_id: Optional[str] = Field(default=None, description="이어갈 LangGraph 스레드 ID")
+    assistant_id: Optional[str] = Field(default=None, description="사용할 LangGraph assistant/graph ID")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="런 메타데이터")
+    config: Optional[Dict[str, Any]] = Field(default=None, description="assistant 실행 설정")
+    context: Optional[Dict[str, Any]] = Field(default=None, description="런타임 컨텍스트")
+
+
+class ChatResponse(BaseModel):
+    thread_id: str
+    assistant_message: Optional[str] = None
     
 class UpdateRequest(BaseModel):
     metadata_path: Optional[str] = Field(
@@ -169,6 +186,76 @@ DEFAULT_OPENMETADATA_URL = "http://localhost:8585/"
 CONFIG_FILE_ENV_VAR = "OPENMETADATA_CONFIG_FILE"
 METADATA_FILE_ENV_VAR = "METADATA_FILE_PATH"
 FAISS_INDEX_DIR_ENV_VAR = "FAISS_INDEX_DIR"
+
+LANGGRAPH_API_URL = "LANGGRAPH_API_URL"
+LANGGRAPH_ASSISTANT_ID = "LANGGRAPH_ASSISTANT_ID"
+OPENAI_API_KEY = "OPENAI_API_KEY"
+
+
+async def get_langgraph_client(api_key: Optional[str] = None) -> LangGraphClient:
+    """Create a LangGraph client using the provided API key (or fallback env)."""
+
+    base_url = os.getenv(LANGGRAPH_API_URL)
+    if not base_url:
+        raise HTTPException(status_code=503, detail="LangGraph API URL이 설정되지 않았습니다.")
+
+    resolved_key = api_key if api_key is not None else os.getenv(OPENAI_API_KEY)
+
+    try:
+        return get_client(url=base_url, api_key=resolved_key)
+    except Exception as exc:  # pragma: no cover - defensive logging
+        logger.error("LangGraph 클라이언트 초기화 실패: %s", exc, exc_info=True)
+        raise HTTPException(status_code=503, detail="LangGraph 클라이언트를 초기화할 수 없습니다.") from exc
+
+
+async def ensure_thread(client: LangGraphClient, thread_id: Optional[str]) -> str:
+    """Return an existing thread id or create a fresh thread."""
+
+    if thread_id:
+        return thread_id
+
+    thread = await client.threads.create(metadata={"source": "data-catalog-search-api"})
+    return thread["thread_id"]
+
+
+def extract_assistant_message(state: Dict[str, Any]) -> Optional[str]:
+    """Pick the latest assistant message from the state values."""
+
+    values = state.get("values")
+    messages: Optional[List[Any]] = None
+
+    if isinstance(values, dict):
+        maybe_messages = values.get("messages")
+        if isinstance(maybe_messages, list):
+            messages = maybe_messages
+
+    if not messages:
+        return None
+
+    for message in reversed(messages):
+        if not isinstance(message, dict):
+            continue
+        role = message.get("type") or message.get("role")
+        if role not in {"ai", "assistant"}:
+            continue
+        content = message.get("content")
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            segments = []
+            for chunk in content:
+                if isinstance(chunk, dict):
+                    text = chunk.get("text")
+                    if text:
+                        segments.append(text)
+            if segments:
+                return "".join(segments)
+        if isinstance(content, dict):
+            text = content.get("text")
+            if isinstance(text, str):
+                return text
+
+    return None
 
 
 def _read_openmetadata_url_from_file(config_path: Path) -> Optional[str]:
@@ -437,6 +524,86 @@ async def search_metadata(request: QueryRequest):
     except Exception as e:
         logger.error(f"검색 중 오류 발생: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="검색 처리 중 내부 오류가 발생했습니다.")
+
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat_with_langgraph(payload: ChatRequest, request: Request) -> ChatResponse:
+    """Proxy chat requests to a LangGraph assistant."""
+    
+    assistant_id = payload.assistant_id or os.getenv(LANGGRAPH_ASSISTANT_ID)
+    if not assistant_id:
+        raise HTTPException(status_code=500, detail="LangGraph assistant ID가 설정되지 않았습니다.")
+
+    api_key = request.headers.get("x-api-key")
+    logger.info(
+        "💬 /chat 시작: assistant_id=%s, thread=%s, has_api_key=%s",
+        assistant_id,
+        payload.thread_id,
+        bool(api_key),
+    )
+    client = await get_langgraph_client(api_key=api_key)
+
+    try:
+        thread_id = await ensure_thread(client, payload.thread_id)
+        logger.info("🧵 thread 준비 완료: %s", thread_id)
+
+        config_payload: Optional[Dict[str, Any]] = payload.config.copy() if payload.config else {}
+        if config_payload is not None:
+            configurable = dict(config_payload.get("configurable", {}))
+        else:
+            configurable = {}
+        if api_key:
+            configurable.setdefault("openai_api_key", api_key)
+        if assistant_id:
+            configurable.setdefault("assistant_id", assistant_id)
+        if configurable:
+            if config_payload is None:
+                config_payload = {}
+            config_payload["configurable"] = configurable
+        elif config_payload is not None and "configurable" in config_payload:
+            config_payload.pop("configurable")
+
+        if config_payload == {}:
+            config_payload = None
+
+        logger.info(
+            "🚀 runs.wait 호출: thread=%s, assistant=%s, metadata=%s, config=%s",
+            thread_id,
+            assistant_id,
+            payload.metadata,
+            config_payload,
+        )
+        await client.runs.wait(
+            thread_id=thread_id,
+            assistant_id=assistant_id,
+            input={"messages": [{"role": "user", "content": payload.message}]},
+            metadata=payload.metadata,
+            config=config_payload,
+            context=payload.context,
+        )
+
+        state = await client.threads.get_state(thread_id=thread_id)
+        logger.debug("📥 threads.get_state 완료: %s", state)
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover - defensive logging
+        logger.error("LangGraph 챗 실행 중 오류: %s", exc, exc_info=True)
+        raise HTTPException(status_code=500, detail="LangGraph 실행 중 오류가 발생했습니다.") from exc
+    finally:
+        with suppress(Exception):
+            await client.aclose()
+        logger.debug("🔚 LangGraph 클라이언트 종료")
+
+    raw_metadata = state.get("metadata")
+    metadata = raw_metadata if isinstance(raw_metadata, dict) else {}
+    assistant_message = extract_assistant_message(state)
+    logger.debug("💡 assistant_message=%s", assistant_message)
+
+    return ChatResponse(
+        thread_id=thread_id,
+        assistant_message=assistant_message,
+    )
+
 
 @app.post("/update")
 async def trigger_metadata_refresh(body: UpdateRequest = UpdateRequest()):
